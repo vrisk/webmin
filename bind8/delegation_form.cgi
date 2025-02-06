@@ -10,7 +10,7 @@ our (%access, %text, %config);
 
 require './bind8-lib.pl';
 $access{'delegation'} || &error($text{'dcreate_ecannot'});
-$access{'ro'} && &error($text{'master_ero'});
+$access{'ro'} && &error($text{'primary_ero'});
 &ui_print_header(undef, $text{'dcreate_title'}, "",
 		 undef, undef, undef, undef, &restart_links());
 

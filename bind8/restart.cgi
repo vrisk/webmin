@@ -17,13 +17,13 @@ my $err = &restart_bind();
 &error($err) if ($err);
 
 if ($access{'remote'}) {
-	# Restart all slaves too
+	# Restart all secondarys too
 	&error_setup();
-	my @slaveerrs = &restart_on_slaves();
-	if (@slaveerrs) {
-		&error(&text('restart_errslave',
+	my @secondaryerrs = &restart_on_secondarys();
+	if (@secondaryerrs) {
+		&error(&text('restart_errsecondary',
 		     "<p>".join("<br>", map { "$_->[0]->{'host'} : $_->[1]" }
-				      	    @slaveerrs)));
+				      	    @secondaryerrs)));
 		}
 	}
 

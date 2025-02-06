@@ -21,7 +21,7 @@ print $text{'hint_desc'},"<p>\n";
 
 print &ui_buttons_start();
 
-# Re-fetch master file button
+# Re-fetch primary file button
 print &ui_buttons_row("refetch.cgi",
 		      $text{'hint_refetch'},
 		      $text{'hint_refetchdesc'},

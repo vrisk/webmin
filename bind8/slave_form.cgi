@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
-# slave_form.cgi
-# A form for creating a new slave or stub zone
+# secondary_form.cgi
+# A form for creating a new secondary or stub zone
 use strict;
 use warnings;
 no warnings 'redefine';
@@ -8,8 +8,8 @@ no warnings 'uninitialized';
 our (%access, %text, %config);
 
 require './bind8-lib.pl';
-my $type = ($0 =~ /slave_form/);
-$access{'slave'} || &error($type ? $text{'screate_ecannot1'}
+my $type = ($0 =~ /secondary_form/);
+$access{'secondary'} || &error($type ? $text{'screate_ecannot1'}
 				 : $text{'screate_ecannot2'});
 my $conf = &get_config();
 &ui_print_header(undef, $type ? $text{'screate_title1'}
@@ -17,7 +17,7 @@ my $conf = &get_config();
 		 undef, undef, undef, undef, &restart_links());
 
 # Start of the form
-print &ui_form_start("create_slave.cgi", "post");
+print &ui_form_start("create_secondary.cgi", "post");
 print &ui_hidden("type", $type);
 print &ui_table_start($type ? $text{'screate_header1'}
 			    : $text{'screate_header2'}, "width=100%", 4);
@@ -43,27 +43,27 @@ if (@views) {
 	}
 
 # Zone file
-print &ui_table_row($text{'slave_file'},
-	&ui_radio("file_def", 2, [ [ 1, $text{'slave_none'} ],
-				   [ 2, $text{'slave_auto'} ],
+print &ui_table_row($text{'secondary_file'},
+	&ui_radio("file_def", 2, [ [ 1, $text{'secondary_none'} ],
+				   [ 2, $text{'secondary_auto'} ],
 				   [ 0, &ui_filebox("file", undef, 30) ] ]), 3);
 
-# Master servers
-print &ui_table_row($text{'slave_masters'},
-	&ui_textarea("masters",
-		     join("\n", split(/\s+/, $config{'default_master'})),
+# primary servers
+print &ui_table_row($text{'secondary_primaries'},
+	&ui_textarea("primaries",
+		     join("\n", split(/\s+/, $config{'default_primary'})),
 		     4, 30), 3);
 
-# Master port
-print &ui_table_row($text{'slave_masterport'},
+# primary port
+print &ui_table_row($text{'secondary_primaryport'},
 	&ui_opt_textbox("port", undef, 5, $text{'default'},
-		        $text{'slave_master_port'}), 3);
+		        $text{'secondary_primary_port'}), 3);
 
-# Create on slave servers?
-my @servers = grep { $_->{'sec'} } &list_slave_servers();
+# Create on secondary servers?
+my @servers = grep { $_->{'sec'} } &list_secondary_servers();
 if (@servers && $access{'remote'}) {
-	print &ui_table_row($text{'master_onslave'},
-		&ui_yesno_radio("onslave", 1));
+	print &ui_table_row($text{'primary_onsecondary'},
+		&ui_yesno_radio("onsecondary", 1));
 	}
 
 print &ui_table_end();

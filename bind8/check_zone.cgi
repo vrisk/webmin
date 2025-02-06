@@ -12,7 +12,7 @@ our (%access, %text, %in);
 &ReadParse();
 $access{'apply'} || &error($text{'check_ecannot'});
 my $zone = &get_zone_name_or_error($in{'zone'}, $in{'view'});
-&can_edit_zone($zone) || &error($text{'master_ecannot'});
+&can_edit_zone($zone) || &error($text{'primary_ecannot'});
 my $desc = &ip6int_to_net(&arpa_to_ip($zone->{'name'}));
 
 &ui_print_header($desc, $text{'check_title'}, "",
@@ -34,6 +34,6 @@ else {
 	print "<b>",&text('check_allok', "<tt>$file</tt>"),"</b><p>\n";
 	}
 
-&ui_print_footer("edit_master.cgi?zone=$in{'zone'}&view=$in{'view'}",
-		 $text{'master_return'});
+&ui_print_footer("edit_primary.cgi?zone=$in{'zone'}&view=$in{'view'}",
+		 $text{'primary_return'});
 

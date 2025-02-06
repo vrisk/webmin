@@ -1,9 +1,9 @@
-master_freeze=Fryszon
-master_freezemsg2=Klicka på den här knappen för att frysa en dynamisk zon innan du uppdaterar den.
-master_unfreeze=Frostskyddszon
-master_unfreezemsg2=Klicka på den här knappen för att frysa upp en dynamisk zon efter att ha uppdaterat den.
-master_checkzone=Kontrollera poster
-master_checkzonemsg=Klicka på den här knappen för att BIND ska kontrollera posterna i denna zon och rapportera om eventuella problem.
+primary_freeze=Fryszon
+primary_freezemsg2=Klicka på den här knappen för att frysa en dynamisk zon innan du uppdaterar den.
+primary_unfreeze=Frostskyddszon
+primary_unfreezemsg2=Klicka på den här knappen för att frysa upp en dynamisk zon efter att ha uppdaterat den.
+primary_checkzone=Kontrollera poster
+primary_checkzonemsg=Klicka på den här knappen för att BIND ska kontrollera posterna i denna zon och rapportera om eventuella problem.
 index_status=Status
 index_viewwarn=Varning - följande zoner finns inte i någon vy : $1
 index_viewwarn2=BIND kanske inte kan starta förrän de flyttas till en vy.
@@ -16,19 +16,19 @@ index_eexpired=Varning: Följande zoner har gått ut DNSSEC-signaturer : $1
 index_eexpired_conf=Automatisk signering bör aktiveras på sidan $1.
 index_eexpired_mod=Använd modulen $1 för att antingen inaktivera DNSSEC för dessa domäner, eller kontrollera varför signering misslyckas.
 
-master_inview=$1 i vy $2
-master_egone=Zon $1 finns inte i någon vy
-master_egone2=Zon $1 finns inte!
-master_egone3=Zon $1 i vyn $2 finns inte!
-master_notify3=Tillåt aviseringar från ..
-master_noinclude=Använd bara poster ovan
-master_convertdesc=Förvandlar denna huvudzon till en slav så att den tar emot poster från en annan masterserver istället för att betjäna dem lokalt.
-master_movedesc=Flyttar denna zon till en annan vy, samtidigt som alla poster och andra alternativ bevaras.
-master_applymsg2=Klicka på den här knappen för att endast tillämpa ändringar för denna zon. Detta fungerar bara om ändringar har tillämpats för hela servern minst en gång sedan zonen skapades.
-master_esoagone=Ingen SOA-post hittades!
-master_einclude=Ytterligare mallfil finns inte
-master_vmin=Denna zon hanteras av Virtualmin. Poster bör redigeras med Virtualmin-gränssnittet för att säkerställa att de överensstämmer med andra virtuella serverinställningar.
-master_vminalias=Denna zon är ett alias för en Virtualmin-domän, som hålls synkroniserad med dess mål. Poster bör aldrig redigeras här, eftersom alla ändringar kommer att skrivas över!
+primary_inview=$1 i vy $2
+primary_egone=Zon $1 finns inte i någon vy
+primary_egone2=Zon $1 finns inte!
+primary_egone3=Zon $1 i vyn $2 finns inte!
+primary_notify3=Tillåt aviseringar från ..
+primary_noinclude=Använd bara poster ovan
+primary_convertdesc=Förvandlar denna huvudzon till en slav så att den tar emot poster från en annan primaryserver istället för att betjäna dem lokalt.
+primary_movedesc=Flyttar denna zon till en annan vy, samtidigt som alla poster och andra alternativ bevaras.
+primary_applymsg2=Klicka på den här knappen för att endast tillämpa ändringar för denna zon. Detta fungerar bara om ändringar har tillämpats för hela servern minst en gång sedan zonen skapades.
+primary_esoagone=Ingen SOA-post hittades!
+primary_einclude=Ytterligare mallfil finns inte
+primary_vmin=Denna zon hanteras av Virtualmin. Poster bör redigeras med Virtualmin-gränssnittet för att säkerställa att de överensstämmer med andra virtuella serverinställningar.
+primary_vminalias=Denna zon är ett alias för en Virtualmin-domän, som hålls synkroniserad med dess mål. Poster bör aldrig redigeras här, eftersom alla ändringar kommer att skrivas över!
 
 delete_mesg3=Är du säker på att du vill ta bort zonen $1?
 delete_vwarn=Denna zon är associerad med Virtualmin-domänen $1, och bör därför inte tas bort här!
@@ -38,12 +38,12 @@ mcreate_dnssec_tools_enable=Aktivera DNSSEC med DNSSEC-verktyg
 mcreate_ednssecsize=Det gick inte att beräkna nyckelstorlek : $1
 mcreate_ednssec=Skapandet skapades, men DNSSEC misslyckades : $1
 
-slave_format=Zon filformat
-slave_raw=Rå binär
-slave_text=Oformatterad text
-slave_convertdesc=Klicka på den här knappen för att konvertera denna slavzon till en master, med alla poster som senast överfördes från det ursprungliga mastersystemet.
-slave_applymsg2=Klicka på den här knappen för att tvinga en överföring av zonen från masterservern så att den får alla de senaste posterna.
-slave_xfer=Testzonöverföring
+secondary_format=Zon filformat
+secondary_raw=Rå binär
+secondary_text=Oformatterad text
+secondary_convertdesc=Klicka på den här knappen för att konvertera denna slavzon till en primary, med alla poster som senast överfördes från det ursprungliga primarysystemet.
+secondary_applymsg2=Klicka på den här knappen för att tvinga en överföring av zonen från primaryservern så att den får alla de senaste posterna.
+secondary_xfer=Testzonöverföring
 
 recs_none=Domänen har inga $1 poster ännu.
 recs_nosearch=Inga poster matchade din sökning.
@@ -240,7 +240,7 @@ log_trusted=Ändrad DNSSEC-verifiering
 log_dnssec=Ändra ny signering av DNSSEC-nyckel
 
 convert_efilesize=Registreringsfilen $1 finns inte eller är tom
-convert_ebinary=Kommandot som behövs för att konvertera från en binär slavzon till en textformatmaster är inte installerad
+convert_ebinary=Kommandot som behövs för att konvertera från en binär slavzon till en textformatprimary är inte installerad
 convert_ecompile=Konvertering av binärt till textformat misslyckades : $1
 
 view_opts2=Alternativ för zoner i vyn
@@ -253,14 +253,14 @@ hint_deletedesc=Klicka på den här knappen för att ta bort den här rotzonen. 
 
 hcreate_header=Detaljer om rotzonen
 
-slaves_ok=Lägg till nu
-slaves_group=I grupp &lt;$1&gt;
-slaves_sameview=Visa med samma namn
-slaves_header=Cluster slaveserveralternativ
+secondarys_ok=Lägg till nu
+secondarys_group=I grupp &lt;$1&gt;
+secondarys_sameview=Visa med samma namn
+secondarys_header=Cluster secondaryserveralternativ
 
 add_eversion2=Server $1 kör inte Webmin-version $2 eller högre, vilket krävs för att lägga till zoner i mer än en vy
 add_eipaddr=Server $1 har en IP-adress istället för ett värdnamn
-add_emyip=Det gick inte att lösa systemets IP-adress. Du bör ställa in <b>Standard-masterserver-IP för fjärrslavarzoner</b> på sidan Modulkonfigurering.
+add_emyip=Det gick inte att lösa systemets IP-adress. Du bör ställa in <b>Standard-primaryserver-IP för fjärrslavarzoner</b> på sidan Modulkonfigurering.
 
 mass_elocal=Saknad eller icke-existerande batchfil
 mass_elocalcannot=Du får inte använda den valda batchfilen

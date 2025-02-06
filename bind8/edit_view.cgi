@@ -43,11 +43,11 @@ print &ui_table_end();
 print &ui_table_start($text{'view_opts2'}, "width=100%", 4,
 		      [ "width=30%", undef, "width=30%", undef ]);
 
-print &address_input($text{'master_transfer'}, "allow-transfer", $vconf);
-print &address_input($text{'master_query'}, "allow-query", $vconf);
+print &address_input($text{'primary_transfer'}, "allow-transfer", $vconf);
+print &address_input($text{'primary_query'}, "allow-query", $vconf);
 
-print &address_input($text{'master_notify2'}, "also-notify", $vconf);
-print &address_input($text{'master_notify3'}, "allow-notify", $vconf);
+print &address_input($text{'primary_notify2'}, "also-notify", $vconf);
+print &address_input($text{'primary_notify3'}, "allow-notify", $vconf);
 
 my $src = &find("transfer-source", $vconf);
 print &ui_table_row($text{'net_taddr'}, &ui_textbox("transfer-source", $src->{'values'}->[0], 15));

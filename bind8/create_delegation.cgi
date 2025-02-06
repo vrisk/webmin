@@ -12,12 +12,12 @@ require './bind8-lib.pl';
 &ReadParse();
 &error_setup($text{'dcreate_err'});
 $access{'delegation'} || &error($text{'dcreate_ecannot'});
-$access{'ro'} && &error($text{'master_ero'});
+$access{'ro'} && &error($text{'primary_ero'});
 my $conf = &get_config();
 my $vconf;
 if ($in{'view'} ne '') {
 	my $view = $conf->[$in{'view'}];
-	&can_edit_view($view) || &error($text{'master_eviewcannot'});
+	&can_edit_view($view) || &error($text{'primary_eviewcannot'});
 	$vconf = $view->{'members'};
 	}
 else {
@@ -47,7 +47,7 @@ else {
 $in{'zone'} =~ s/\.$//;
 foreach my $z (&find("zone", $vconf)) {
 	if (lc($z->{'value'}) eq lc($in{'zone'})) {
-		&error($text{'master_etaken'});
+		&error($text{'primary_etaken'});
 		}
 	}
 

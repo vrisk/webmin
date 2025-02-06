@@ -37,7 +37,7 @@ our %access = &get_module_acl();
 my $zone_names_cache = "$module_config_directory/zone-names";
 my $zone_names_version = 4;
 my @list_zone_names_cache;
-my $slave_error;
+my $secondary_error;
 my %lines_count;
 our $dnssec_cron_cmd = "$module_config_directory/resign.pl";
 
@@ -841,8 +841,8 @@ if ($ipv6) {
 		$rev =~ s/\.$//g;
 		foreach my $z (@zl) {
 			if (lc($z->{'name'}) eq $rev &&
-			    ($z->{'type'} eq 'master' || $z->{'type'} eq 'primary')) {
-				# found the reverse master domain
+			    ($z->{'type'} eq 'primary' || $z->{'type'} eq 'primary')) {
+				# found the reverse primary domain
 				$revconf = $z;
 				last DOMAIN;
 				}
@@ -861,8 +861,8 @@ else {
 			$zname =~ s/^(\d+)\/(\d+)\.//;
 			if ((lc($zname) eq $rev ||
 			     lc($zname) eq "$rev.") &&
-			    ($z->{'type'} eq "master" || $z->{'type'} eq "primary")) {
-				# found the reverse master domain
+			    ($z->{'type'} eq "primary" || $z->{'type'} eq "primary")) {
+				# found the reverse primary domain
 				$revconf = $z;
 				last DOMAIN;
 				}
@@ -909,8 +909,8 @@ DOMAIN: for(my $i=1; $i<@parts; $i++) {
 		my $typed;
 		if ((lc($z->{'name'}) eq $fwd ||
 		     lc($z->{'name'}) eq "$fwd.") &&
-		    ($z->{'type'} eq "master" || $z->{'type'} eq "primary")) {
-			# Found the forward master!
+		    ($z->{'type'} eq "primary" || $z->{'type'} eq "primary")) {
+			# Found the forward primary!
 			$fwdconf = $z;
 			last DOMAIN;
 			}
@@ -1574,11 +1574,11 @@ if ($v ne ".") {
 return $v;
 }
 
-# set_ownership(file, [slave-mode])
+# set_ownership(file, [secondary-mode])
 # Sets the BIND ownership and permissions on some file
 sub set_ownership
 {
-my ($file, $slave) = @_;
+my ($file, $secondary) = @_;
 my ($user, $group, $perms);
 if ($config{'file_owner'}) {
 	# From config
@@ -1589,8 +1589,8 @@ elsif ($file =~ /^(.*)\/([^\/]+)$/) {
 	my @st = stat($1);
 	($user, $group) = ($st[4], $st[5]);
 	}
-if ($slave && $config{'slave_file_perms'}) {
-	$perms = oct($config{'slave_file_perms'});
+if ($secondary && $config{'secondary_file_perms'}) {
+	$perms = oct($config{'secondary_file_perms'});
 	}
 elsif ($config{'file_perms'}) {
 	$perms = oct($config{'file_perms'});
@@ -1839,13 +1839,13 @@ return &popup_window_button("free_chooser.cgi", 200, 500, 1,
 			    [ [ "ifield", $_[0] ] ]);
 }
 
-# create_slave_zone(name, master-ip, [view], [file], [&other-ips])
-# A convenience function for creating a new slave zone, if it doesn't exist
+# create_secondary_zone(name, primary-ip, [view], [file], [&other-ips])
+# A convenience function for creating a new secondary zone, if it doesn't exist
 # yet. Mainly useful for Virtualmin, to avoid excessive transfer of BIND
 # configuration data.
 # Returns 0 on success, 1 if BIND is not setup, 2 if the zone already exists,
-# or 3 if the view doesn't exist, or 4 if the slave file couldn't be created
-sub create_slave_zone
+# or 3 if the view doesn't exist, or 4 if the secondary file couldn't be created
+sub create_secondary_zone
 {
 my $parent = &get_config_parent();
 my $conf = $parent->{'members'};
@@ -1864,7 +1864,7 @@ return 2 if ($z);
 
 # Create it
 my @mips = &unique($_[1], @{$_[4]});
-my $masters = { 'name' => 'masters',
+my $primarys = { 'name' => 'primarys',
                 'type' => 1,
                 'members' => [ map { { 'name' => $_ } } @mips ] };
 my $allow = { 'name' => 'allow-transfer',
@@ -1874,14 +1874,14 @@ my $dir = { 'name' => 'zone',
             'values' => [ $_[0] ],
             'type' => 1,
             'members' => [ { 'name' => 'type',
-                             'values' => [ 'slave' ] },
-                             $masters,
+                             'values' => [ 'secondary' ] },
+                             $primarys,
 			     $allow,
                          ]
 	     };
-my $base = $config{'slave_dir'} || &base_directory();
+my $base = $config{'secondary_dir'} || &base_directory();
 if ($base !~ /^([a-z]:)?\//) {
-	# Slave dir is relative .. make absolute
+	# secondary dir is relative .. make absolute
 	$base = &base_directory()."/".$base;
 	}
 my $file;
@@ -1899,7 +1899,7 @@ elsif ($_[3] ne "none") {
 				     'values' => [ $file ] } );
 	}
 
-# Create the slave file, so that BIND can write to it
+# Create the secondary file, so that BIND can write to it
 if ($file) {
 	my $ZONE;
 	&open_tempfile($ZONE, ">".&make_chroot($file), 1, 1) || return 4;
@@ -1930,15 +1930,15 @@ foreach my $view (@views) {
 return 0;
 }
 
-# create_master_zone(name, &slave-ips, [view], [file], &records)
-# A convenience function for creating a new master zone, if it doesn't exist
+# create_primary_zone(name, &secondary-ips, [view], [file], &records)
+# A convenience function for creating a new primary zone, if it doesn't exist
 # yet. Mainly useful for Virtualmin, to avoid excessive transfer of BIND
 # configuration data.
 # Returns 0 on success, 1 if BIND is not setup, 2 if the zone already exists,
 # or 3 if the view doesn't exist, or 4 if the zone file couldn't be created
-sub create_master_zone
+sub create_primary_zone
 {
-my ($name, $slaves, $viewname, $file, $records) = @_;
+my ($name, $secondarys, $viewname, $file, $records) = @_;
 my $parent = &get_config_parent();
 my $conf = $parent->{'members'};
 my $opts = &find("options", $conf);
@@ -1960,12 +1960,12 @@ my $dir = { 'name' => 'zone',
                'values' => [ $name ],
                'type' => 1,
                'members' => [ { 'name' => 'type',
-                                'values' => [ 'master' ] },
+                                'values' => [ 'primary' ] },
                             ]
 	     };
-my $base = $config{'master_dir'} || &base_directory();
+my $base = $config{'primary_dir'} || &base_directory();
 if ($base !~ /^([a-z]:)?\//) {
-	# Master dir is relative .. make absolute
+	# primary dir is relative .. make absolute
 	$base = &base_directory()."/".$base;
 	}
 if (!$file) {
@@ -1976,9 +1976,9 @@ if (!$file) {
 push(@{$dir->{'members'}}, { 'name' => 'file',
 			     'values' => [ $file ] } );
 
-# Allow transfer from slave IPs
+# Allow transfer from secondary IPs
 my (@notify, @transfer);
-foreach my $s (@$slaves) {
+foreach my $s (@$secondarys) {
 	push(@notify, { 'name' => $s });
 	push(@transfer, { 'name' => $s });
 	}
@@ -2049,9 +2049,9 @@ foreach my $view (@views) {
 return 0;
 }
 
-# get_master_zone_file(name, [chroot])
-# Returns the absolute path to a master zone records file
-sub get_master_zone_file
+# get_primary_zone_file(name, [chroot])
+# Returns the absolute path to a primary zone records file
+sub get_primary_zone_file
 {
 my ($name, $chroot) = @_;
 my $conf = &get_config();
@@ -2068,22 +2068,22 @@ $filename = &make_chroot($filename) if ($chroot);
 return $filename;
 }
 
-# get_master_zone_records(name)
-# Returns a list of all the records in a master zone, each of which is a hashref
-sub get_master_zone_records
+# get_primary_zone_records(name)
+# Returns a list of all the records in a primary zone, each of which is a hashref
+sub get_primary_zone_records
 {
 my ($name) = @_;
-my $filename = &get_master_zone_file($name, 0);
+my $filename = &get_primary_zone_file($name, 0);
 return ( ) if (!$filename);
 return &read_zone_file($filename, $name);
 }
 
-# save_master_zone_records(name, &records)
-# Update all the records in the master zone, based on a list of hashrefs
-sub save_master_zone_records
+# save_primary_zone_records(name, &records)
+# Update all the records in the primary zone, based on a list of hashrefs
+sub save_primary_zone_records
 {
 my ($name, $records) = @_;
-my $filename = &get_master_zone_file($name, 0);
+my $filename = &get_primary_zone_file($name, 0);
 return 0 if (!$filename);
 my $ZONE;
 &open_tempfile($ZONE, ">".&make_chroot($filename), 1, 1) || return 0;
@@ -2300,14 +2300,14 @@ if ($out =~ /not found/i) {
 	my $err = &restart_bind();
 	return $err if ($err);
 	if ($access{'remote'}) {
-		# Restart all slaves too
+		# Restart all secondarys too
 		&error_setup();
-		my @slaveerrs = &restart_on_slaves();
-		if (@slaveerrs) {
-			return &text('restart_errslave',
+		my @secondaryerrs = &restart_on_secondarys();
+		if (@secondaryerrs) {
+			return &text('restart_errsecondary',
 			     "<p>".join("<br>",
 					map { "$_->[0]->{'host'} : $_->[1]" }
-					    @slaveerrs));
+					    @secondaryerrs));
 			}
 		}
 	}
@@ -2479,7 +2479,7 @@ foreach my $h (@{$_[0]}) {
 # built from the primary configuration.
 sub list_zone_names
 {
-# Check if any files have changed, or if the master config has changed, or
+# Check if any files have changed, or if the primary config has changed, or
 # the PID file.
 my (%files, %znc);
 my ($changed, $filecount, %donefile);
@@ -2532,7 +2532,7 @@ if ($changed || !$znc{'version'} ||
 		next if (!$type);
 		$type = lc($type);
 		my $file = &find_value("file", $z->{'members'});
-		$file ||= "";	# slaves and other types with no file
+		$file ||= "";	# secondarys and other types with no file
 		my $up = &find("update-policy", $z->{'members'});
 		my $au = &find("allow-update", $z->{'members'});
 		my $dynamic = $up || $au ? 1 : 0;
@@ -2629,8 +2629,8 @@ sub get_zone_name_or_error
 {
 my $zone = &get_zone_name(@_);
 if (!$zone) {
-	my $msg = $_[1] eq 'any' ? 'master_egone' :
-		  $_[1] eq '' ? 'master_egone2' : 'master_egone3';
+	my $msg = $_[1] eq 'any' ? 'primary_egone' :
+		  $_[1] eq '' ? 'primary_egone2' : 'primary_egone3';
 	&error(&text($msg, @_));
 	}
 return $zone;
@@ -2654,9 +2654,9 @@ my $z = $conf->[$zone->{'index'}];
 return wantarray ? ( $z, $bconf, $parent ) : $z;
 }
 
-# list_slave_servers()
-# Returns a list of Webmin servers on which slave zones are created / deleted
-sub list_slave_servers
+# list_secondary_servers()
+# Returns a list of Webmin servers on which secondary zones are created / deleted
+sub list_secondary_servers
 {
 &foreign_require("servers", "servers-lib.pl");
 my %ids = map { $_, 1 } split(/\s+/, $config{'servers'} || '');
@@ -2669,20 +2669,20 @@ if (%ids) {
 		}
 	return @rv;
 	}
-elsif ($config{'default_slave'} && !defined($config{'servers'})) {
-	# Migrate old-style setting of single slave
-	my ($serv) = grep { $_->{'host'} eq $config{'default_slave'} }
+elsif ($config{'default_secondary'} && !defined($config{'servers'})) {
+	# Migrate old-style setting of single secondary
+	my ($serv) = grep { $_->{'host'} eq $config{'default_secondary'} }
 			     @servers;
 	if ($serv) {
-		&add_slave_server($serv);
+		&add_secondary_server($serv);
 		return ($serv);
 		}
 	}
 return ( );
 }
 
-# add_slave_server(&server)
-sub add_slave_server
+# add_secondary_server(&server)
+sub add_secondary_server
 {
 &lock_file($module_config_file);
 &foreign_require("servers", "servers-lib.pl");
@@ -2692,33 +2692,33 @@ if ($_[0]->{'sec'}) {
 	my @secsids = split(/\s+/, $config{'secservers'});
 	$config{'secservers'} = join(" ", @secsids, $_[0]->{'id'});
 	}
-&sync_default_slave();
+&sync_default_secondary();
 &save_module_config();
 &unlock_file($module_config_file);
 &servers::save_server($_[0]);
 }
 
-# delete_slave_server(&server)
-sub delete_slave_server
+# delete_secondary_server(&server)
+sub delete_secondary_server
 {
 &lock_file($module_config_file);
 my @sids = split(/\s+/, $config{'servers'});
 $config{'servers'} = join(" ", grep { $_ != $_[0]->{'id'} } @sids);
 my @secsids = split(/\s+/, $config{'secservers'});
 $config{'secservers'} = join(" ", grep { $_ != $_[0]->{'id'} } @secsids);
-&sync_default_slave();
+&sync_default_secondary();
 &save_module_config();
 &unlock_file($module_config_file);
 }
 
-sub sync_default_slave
+sub sync_default_secondary
 {
-my @servers = &list_slave_servers();
+my @servers = &list_secondary_servers();
 if (@servers) {
-	$config{'default_slave'} = $servers[0]->{'host'};
+	$config{'default_secondary'} = $servers[0]->{'host'};
 	}
 else {
-	$config{'default_slave'} = '';
+	$config{'default_secondary'} = '';
 	}
 }
 
@@ -2728,15 +2728,15 @@ sub server_name
 return $_[0]->{'desc'} ? $_[0]->{'desc'} : $_[0]->{'host'};
 }
 
-# create_master_records(file, zone, master, email, refresh, retry, expiry, min,
-#			add-master-ns, add-slaves-ns, add-template, tmpl-ip,
+# create_primary_records(file, zone, primary, email, refresh, retry, expiry, min,
+#			add-primary-ns, add-secondarys-ns, add-template, tmpl-ip,
 #			add-template-reverse)
-# Creates the records file for a new master zone. Returns undef on success, or
+# Creates the records file for a new primary zone. Returns undef on success, or
 # an error message on failure.
-sub create_master_records
+sub create_primary_records
 {
-my ($file, $zone, $master, $email, $refresh, $retry, $expiry, $min,
-    $add_master, $add_slaves, $add_tmpl, $ip, $addrev) = @_;
+my ($file, $zone, $primary, $email, $refresh, $retry, $expiry, $min,
+    $add_primary, $add_secondarys, $add_tmpl, $ip, $addrev) = @_;
 
 # Create the zone file
 &lock_file(&make_chroot($file));
@@ -2744,7 +2744,7 @@ my $ZONE;
 &open_tempfile($ZONE, ">".&make_chroot($file), 1) ||
 	return &text('create_efile3', $file, $!);
 &print_tempfile($ZONE, "\$ttl $min\n")
-	if ($config{'master_ttl'});
+	if ($config{'primary_ttl'});
 &close_tempfile($ZONE);
 
 # create the SOA and NS records
@@ -2756,19 +2756,19 @@ else {
 	# Use Unix time for date and running number serials
         $serial = time();
         }
-my $vals = "$master $email (\n".
+my $vals = "$primary $email (\n".
         "\t\t\t$serial\n".
         "\t\t\t$refresh\n".
         "\t\t\t$retry\n".
         "\t\t\t$expiry\n".
         "\t\t\t$min )";
 &create_record($file, "$zone.", undef, "IN", "SOA", $vals);
-&create_record($file, "$zone.", undef, "IN", "NS", $master)
-	if ($add_master);
-if ($add_slaves) {
-	foreach my $slave (&list_slave_servers()) {
-		my @bn = $slave->{'nsname'} ||
-				gethostbyname($slave->{'host'});
+&create_record($file, "$zone.", undef, "IN", "NS", $primary)
+	if ($add_primary);
+if ($add_secondarys) {
+	foreach my $secondary (&list_secondary_servers()) {
+		my @bn = $secondary->{'nsname'} ||
+				gethostbyname($secondary->{'host'});
 		my $full = "$bn[0].";
 		&create_record($file, "$zone.", undef, "IN", "NS", $full);
 		}
@@ -2876,13 +2876,13 @@ $format =~ s/ZONE/$subs/g;
 return $base."/".$format;
 }
 
-# create_on_slaves(zone, master-ip, file, [&hostnames], [local-view],
-# 		   [&extra-slave-ips])
-# Creates the given zone on all configured slave servers, and returns a list
+# create_on_secondarys(zone, primary-ip, file, [&hostnames], [local-view],
+# 		   [&extra-secondary-ips])
+# Creates the given zone on all configured secondary servers, and returns a list
 # of errors
-sub create_on_slaves
+sub create_on_secondarys
 {
-my ($zone, $master, $file, $hosts, $localview, $moreslaves) = @_;
+my ($zone, $primary, $file, $hosts, $localview, $moresecondarys) = @_;
 my %on;
 if ($hosts && !ref($hosts)) {
 	$hosts = [ split(/\s+/, $hosts) ];
@@ -2890,220 +2890,220 @@ if ($hosts && !ref($hosts)) {
 if ($hosts) {
 	%on = map { $_, 1 } @$hosts;
 	}
-&remote_error_setup(\&slave_error_handler);
-my @slaveerrs;
-my @slaves = &list_slave_servers();
-foreach my $slave (@slaves) {
+&remote_error_setup(\&secondary_error_handler);
+my @secondaryerrs;
+my @secondarys = &list_secondary_servers();
+foreach my $secondary (@secondarys) {
 	# Skip if not on list to add to
-	next if (%on && !$on{$slave->{'host'}} && !$on{$slave->{'nsname'}});
+	next if (%on && !$on{$secondary->{'host'}} && !$on{$secondary->{'nsname'}});
 
 	# Connect to server
-	$slave_error = undef;
-	&remote_foreign_require($slave, "bind8", "bind8-lib.pl");
-	if ($slave_error) {
-		push(@slaveerrs, [ $slave, $slave_error ]);
+	$secondary_error = undef;
+	&remote_foreign_require($secondary, "bind8", "bind8-lib.pl");
+	if ($secondary_error) {
+		push(@secondaryerrs, [ $secondary, $secondary_error ]);
 		next;
 		}
 
-	# Work out other slave IPs
-	my @otherslaves;
-	if ($config{'other_slaves'}) {
-		@otherslaves = grep { $_ ne '' }
+	# Work out other secondary IPs
+	my @othersecondarys;
+	if ($config{'other_secondarys'}) {
+		@othersecondarys = grep { $_ ne '' }
 				  map { &to_ipaddress($_->{'host'}) ||
 					&to_ip6address($_->{'host'}) }
-				      grep { $_ ne $slave } @slaves;
+				      grep { $_ ne $secondary } @secondarys;
 		}
-	if ($config{'extra_slaves'}) {
-		push(@otherslaves,
+	if ($config{'extra_secondarys'}) {
+		push(@othersecondarys,
 		     grep { $_ ne '' }
                           map { &to_ipaddress($_) || &to_ip6address($_) }
-			      split(/\s+/, $config{'extra_slaves'}));
+			      split(/\s+/, $config{'extra_secondarys'}));
 		}
-	if ($moreslaves) {
-		push(@otherslaves, @$moreslaves);
+	if ($moresecondarys) {
+		push(@othersecondarys, @$moresecondarys);
 		}
 
 	# Work out the view
 	my $view;
-	if ($slave->{'bind8_view'} eq '*') {
+	if ($secondary->{'bind8_view'} eq '*') {
 		# Same as this system
 		$view = $localview;
 		}
-	elsif ($slave->{'bind8_view'}) {
+	elsif ($secondary->{'bind8_view'}) {
 		# Named view
-		$view = $slave->{'bind8_view'};
+		$view = $secondary->{'bind8_view'};
 		}
 
 	# Create the zone
-	my $err = &remote_foreign_call($slave, "bind8",
-		"create_slave_zone", $zone, $master,
-		$view, $file, \@otherslaves);
+	my $err = &remote_foreign_call($secondary, "bind8",
+		"create_secondary_zone", $zone, $primary,
+		$view, $file, \@othersecondarys);
 	if ($err == 1) {
-		push(@slaveerrs, [ $slave, $text{'master_esetup'} ]);
+		push(@secondaryerrs, [ $secondary, $text{'primary_esetup'} ]);
 		}
 	elsif ($err == 2) {
-		push(@slaveerrs, [ $slave, $text{'master_etaken'} ]);
+		push(@secondaryerrs, [ $secondary, $text{'primary_etaken'} ]);
 		}
 	elsif ($err == 3) {
-		push(@slaveerrs, [ $slave, &text('master_eview',
-					 $slave->{'bind8_view'}) ]);
+		push(@secondaryerrs, [ $secondary, &text('primary_eview',
+					 $secondary->{'bind8_view'}) ]);
 		}
 	}
 &remote_error_setup();
-return @slaveerrs;
+return @secondaryerrs;
 }
 
-# delete_on_slaves(domain, [&slave-hostnames], [local-view])
-# Delete some domain or all or listed slave servers
-sub delete_on_slaves
+# delete_on_secondarys(domain, [&secondary-hostnames], [local-view])
+# Delete some domain or all or listed secondary servers
+sub delete_on_secondarys
 {
-my ($dom, $slavehosts, $localview) = @_;
-my %on = map { $_, 1 } @$slavehosts;
-&remote_error_setup(\&slave_error_handler);
-my @slaveerrs;
-foreach my $slave (&list_slave_servers()) {
-	next if (%on && !$on{$slave->{'host'}} && !$on{$slave->{'nsname'}});
+my ($dom, $secondaryhosts, $localview) = @_;
+my %on = map { $_, 1 } @$secondaryhosts;
+&remote_error_setup(\&secondary_error_handler);
+my @secondaryerrs;
+foreach my $secondary (&list_secondary_servers()) {
+	next if (%on && !$on{$secondary->{'host'}} && !$on{$secondary->{'nsname'}});
 
 	# Connect to server
-	$slave_error = undef;
-	&remote_foreign_require($slave, "bind8", "bind8-lib.pl");
-	if ($slave_error) {
-		push(@slaveerrs, [ $slave, $slave_error ]);
+	$secondary_error = undef;
+	&remote_foreign_require($secondary, "bind8", "bind8-lib.pl");
+	if ($secondary_error) {
+		push(@secondaryerrs, [ $secondary, $secondary_error ]);
 		next;
 		}
 
 	# Work out the view
 	my $view;
-	if ($slave->{'bind8_view'} eq "*") {
-		# Same as on master .. but for now, don't pass in any view
+	if ($secondary->{'bind8_view'} eq "*") {
+		# Same as on primary .. but for now, don't pass in any view
 		# so that it will be found automatically
 		$view = $localview;
 		}
-	elsif ($slave->{'bind8_view'}) {
+	elsif ($secondary->{'bind8_view'}) {
 		# Named view
-		$view = $slave->{'bind8_view'};
+		$view = $secondary->{'bind8_view'};
 		}
 
 	# Delete the zone
-	my $err = &remote_foreign_call($slave, "bind8", "delete_zone",
+	my $err = &remote_foreign_call($secondary, "bind8", "delete_zone",
 			    $dom, $view, 1);
 	if ($err == 1) {
-		push(@slaveerrs, [ $slave, $text{'delete_ezone'} ]);
+		push(@secondaryerrs, [ $secondary, $text{'delete_ezone'} ]);
 		}
 	elsif ($err == 2) {
-		push(@slaveerrs, [ $slave, &text('master_eview',
-					 $slave->{'bind8_view'}) ]);
+		push(@secondaryerrs, [ $secondary, &text('primary_eview',
+					 $secondary->{'bind8_view'}) ]);
 		}
 	}
 &remote_error_setup();
-return @slaveerrs;
+return @secondaryerrs;
 }
 
-# rename_on_slaves(olddomain, newdomain, [&slave-hostnames])
-# Changes the name of some domain on all or listed slave servers
-sub rename_on_slaves
+# rename_on_secondarys(olddomain, newdomain, [&secondary-hostnames])
+# Changes the name of some domain on all or listed secondary servers
+sub rename_on_secondarys
 {
 my ($olddom, $newdom, $on) = @_;
 my %on = map { $_, 1 } @$on;
-&remote_error_setup(\&slave_error_handler);
-my @slaveerrs;
-foreach my $slave (&list_slave_servers()) {
-	next if (%on && !$on{$slave->{'host'}} && !$on{$slave->{'nsname'}});
+&remote_error_setup(\&secondary_error_handler);
+my @secondaryerrs;
+foreach my $secondary (&list_secondary_servers()) {
+	next if (%on && !$on{$secondary->{'host'}} && !$on{$secondary->{'nsname'}});
 
 	# Connect to server
-	$slave_error = undef;
-	&remote_foreign_require($slave, "bind8", "bind8-lib.pl");
-	if ($slave_error) {
-		push(@slaveerrs, [ $slave, $slave_error ]);
+	$secondary_error = undef;
+	&remote_foreign_require($secondary, "bind8", "bind8-lib.pl");
+	if ($secondary_error) {
+		push(@secondaryerrs, [ $secondary, $secondary_error ]);
 		next;
 		}
 
 	# Delete the zone
-	my $err = &remote_foreign_call($slave, "bind8", "rename_zone",
-			    $olddom, $newdom, $slave->{'bind8_view'});
+	my $err = &remote_foreign_call($secondary, "bind8", "rename_zone",
+			    $olddom, $newdom, $secondary->{'bind8_view'});
 	if ($err == 1) {
-		push(@slaveerrs, [ $slave, $text{'delete_ezone'} ]);
+		push(@secondaryerrs, [ $secondary, $text{'delete_ezone'} ]);
 		}
 	elsif ($err == 2) {
-		push(@slaveerrs, [ $slave, &text('master_eview',
-					 $slave->{'bind8_view'}) ]);
+		push(@secondaryerrs, [ $secondary, &text('primary_eview',
+					 $secondary->{'bind8_view'}) ]);
 		}
 	}
 &remote_error_setup();
-return @slaveerrs;
+return @secondaryerrs;
 }
 
-# restart_on_slaves([&slave-hostnames])
-# Re-starts BIND on all or listed slave servers, and returns a list of errors
-sub restart_on_slaves
+# restart_on_secondarys([&secondary-hostnames])
+# Re-starts BIND on all or listed secondary servers, and returns a list of errors
+sub restart_on_secondarys
 {
 my %on = map { $_, 1 } @{$_[0]};
-&remote_error_setup(\&slave_error_handler);
-my @slaveerrs;
-foreach my $slave (&list_slave_servers()) {
-	next if (%on && !$on{$slave->{'nsname'}} && !$on{$slave->{'host'}});
+&remote_error_setup(\&secondary_error_handler);
+my @secondaryerrs;
+foreach my $secondary (&list_secondary_servers()) {
+	next if (%on && !$on{$secondary->{'nsname'}} && !$on{$secondary->{'host'}});
 
 	# Find the PID file
-	$slave_error = undef;
-	&remote_foreign_require($slave, "bind8", "bind8-lib.pl");
-	if ($slave_error) {
-		push(@slaveerrs, [ $slave, $slave_error ]);
+	$secondary_error = undef;
+	&remote_foreign_require($secondary, "bind8", "bind8-lib.pl");
+	if ($secondary_error) {
+		push(@secondaryerrs, [ $secondary, $secondary_error ]);
 		next;
 		}
-	my $sver = &remote_foreign_call($slave, "bind8",
+	my $sver = &remote_foreign_call($secondary, "bind8",
 				     "get_webmin_version");
 	my $pidfile = &remote_foreign_call(
-		$slave, "bind8", "get_pid_file");
+		$secondary, "bind8", "get_pid_file");
 	$pidfile = &remote_foreign_call(
-		$slave, "bind8", "make_chroot", $pidfile, 1);
+		$secondary, "bind8", "make_chroot", $pidfile, 1);
 
 	# Read the PID and restart
-	my $pid = &remote_foreign_call($slave, "bind8",
+	my $pid = &remote_foreign_call($secondary, "bind8",
 				    "check_pid_file", $pidfile);
 	if (!$pid) {
-		push(@slaveerrs, [ $slave, &text('restart_erunning2',
-						 $slave->{'host'}) ]);
+		push(@secondaryerrs, [ $secondary, &text('restart_erunning2',
+						 $secondary->{'host'}) ]);
 		next;
 		}
-	my $err = &remote_foreign_call($slave, "bind8", "restart_bind");
+	my $err = &remote_foreign_call($secondary, "bind8", "restart_bind");
 	if ($err) {
-		push(@slaveerrs, [ $slave, &text('restart_esig2',
-						 $slave->{'host'}, $err) ]);
+		push(@secondaryerrs, [ $secondary, &text('restart_esig2',
+						 $secondary->{'host'}, $err) ]);
 		}
 	}
 &remote_error_setup();
-return @slaveerrs;
+return @secondaryerrs;
 }
 
-# restart_zone_on_slaves(domain, [&slave-hostnames])
-# Re-load a zone on all slave servers
-sub restart_zone_on_slaves
+# restart_zone_on_secondarys(domain, [&secondary-hostnames])
+# Re-load a zone on all secondary servers
+sub restart_zone_on_secondarys
 {
-my ($dom, $onslaves) = @_;
-my %on = map { $_, 1 } @$onslaves;
-&remote_error_setup(\&slave_error_handler);
-my @slaveerrs;
-foreach my $slave (&list_slave_servers()) {
-	next if (%on && !$on{$slave->{'host'}});
+my ($dom, $onsecondarys) = @_;
+my %on = map { $_, 1 } @$onsecondarys;
+&remote_error_setup(\&secondary_error_handler);
+my @secondaryerrs;
+foreach my $secondary (&list_secondary_servers()) {
+	next if (%on && !$on{$secondary->{'host'}});
 
-	&remote_foreign_require($slave, "bind8", "bind8-lib.pl");
-	if ($slave_error) {
-		push(@slaveerrs, [ $slave, $slave_error ]);
+	&remote_foreign_require($secondary, "bind8", "bind8-lib.pl");
+	if ($secondary_error) {
+		push(@secondaryerrs, [ $secondary, $secondary_error ]);
 		next;
 		}
-	my $err = &remote_foreign_call($slave, "bind8", "restart_zone", $dom);
+	my $err = &remote_foreign_call($secondary, "bind8", "restart_zone", $dom);
 	if ($err) {
-		push(@slaveerrs, [ $slave, &text('restart_esig2',
-						 $slave->{'host'}, $err) ]);
+		push(@secondaryerrs, [ $secondary, &text('restart_esig2',
+						 $secondary->{'host'}, $err) ]);
 		}
 	}
 &remote_error_setup();
-return @slaveerrs;
+return @secondaryerrs;
 }
 
-sub slave_error_handler
+sub secondary_error_handler
 {
-$slave_error = $_[0];
+$secondary_error = $_[0];
 }
 
 sub get_forward_record_types
@@ -3233,8 +3233,8 @@ my @views = grep { &can_edit_view($_) } &find("view", $conf);
 $view = '' if (!defined($view));
 if ($view eq '' && @views || $view ne '' && @views > 1) {
 	return &ui_buttons_row("move_zone.cgi",
-                $text{'master_move'},
-                $text{'master_movedesc'},
+                $text{'primary_move'},
+                $text{'primary_movedesc'},
                 &ui_hidden("zone", $zonename).
                 &ui_hidden("view", $view),
                 &ui_select("newview", undef,
@@ -3867,12 +3867,12 @@ if (&find_byname("nscd")) {
 	}
 }
 
-# transfer_slave_records(zone, &masters, [file], [source-ip, [source-port]])
-# Transfer DNS records from a master into some file. Returns a map from master
+# transfer_secondary_records(zone, &primarys, [file], [source-ip, [source-port]])
+# Transfer DNS records from a primary into some file. Returns a map from primary
 # IPs to errors.
-sub transfer_slave_records
+sub transfer_secondary_records
 {
-my ($dom, $masters, $file, $source, $sourceport) = @_;
+my ($dom, $primarys, $file, $source, $sourceport) = @_;
 my $sourcearg;
 if ($source && $source ne "*") {
 	$sourcearg = "-t ".$source;
@@ -3882,7 +3882,7 @@ if ($source && $source ne "*") {
 	}
 my %rv;
 my $dig = &has_command("dig");
-foreach my $ip (@$masters) {
+foreach my $ip (@$primarys) {
 	if (!$dig) {
 		$rv{$ip} = "Missing dig command";
 		}
@@ -4398,7 +4398,7 @@ my %cache;
 &read_file($dnssec_expiry_cache, \%cache);
 my $changed = 0;
 foreach my $z (&list_zone_names()) {
-	next if ($z->{'type'} ne 'master' && $z->{'type'} ne 'primary');
+	next if ($z->{'type'} ne 'primary' && $z->{'type'} ne 'primary');
 	my ($t, $e);
 	if ($cache{$z->{'name'}}) {
 		($t, $e) = split(/\s+/, $cache{$z->{'name'}});
@@ -4462,7 +4462,7 @@ sub zone_subhead
 my ($zone) = @_;
 my $desc = &ip6int_to_net(&arpa_to_ip($zone->{'name'}));
 my $view = $zone->{'view'};
-return $view ? &text('master_inview', $desc, $view) : $desc;
+return $view ? &text('primary_inview', $desc, $view) : $desc;
 }
 
 # format_dnssec_public_key(pubkey)
@@ -4481,8 +4481,8 @@ return join(" ", @kvalues) . " " . join("\n$kvspace ", splice(@krvalues, 6));
 sub redirect_url
 {
 my ($type, $zone, $view) = @_;
-my $r = $type eq "master" || $type eq "primary" ? "edit_master.cgi" :
-	$type eq "forward" ? "edit_forward.cgi" : "edit_slave.cgi";
+my $r = $type eq "primary" || $type eq "primary" ? "edit_primary.cgi" :
+	$type eq "forward" ? "edit_forward.cgi" : "edit_secondary.cgi";
 if ($zone) {
 	$r .= "?zone=".&urlize($zone);
 	if ($view) {

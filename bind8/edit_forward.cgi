@@ -16,7 +16,7 @@ my $z = &zone_to_config($zone);
 my $zconf = $z->{'members'};
 my $dom = $zone->{'name'};
 &can_edit_zone($zone) ||
-	&error($text{'master_ecannot'});
+	&error($text{'primary_ecannot'});
 
 $dom = $zone->{'name'};
 &can_edit_zone($zone) ||
@@ -31,7 +31,7 @@ print &ui_hidden("view", $in{'view'});
 print &ui_table_start($text{'fwd_opts'}, "width=100%", 4);
 
 # Forwarding servers
-print &forwarders_input($text{'fwd_masters'}, "forwarders", $zconf);
+print &forwarders_input($text{'fwd_primarys'}, "forwarders", $zconf);
 
 print &choice_input($text{'fwd_forward'}, "forward", $zconf,
 		    $text{'yes'}, "first", $text{'no'}, "only",
@@ -58,7 +58,7 @@ else {
 	# Delete zone
 	if ($access{'delete'}) {
 		print &ui_buttons_row("delete_zone.cgi",
-			$text{'master_del'}, $text{'fwd_delmsg'},
+			$text{'primary_del'}, $text{'fwd_delmsg'},
 			&ui_hidden("zone", $in{'zone'}).
 			&ui_hidden("view", $in{'view'}));
 		}

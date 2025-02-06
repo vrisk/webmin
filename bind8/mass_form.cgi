@@ -28,11 +28,11 @@ print &ui_table_row($text{'mass_text'},
 print &ui_table_row($text{'mass_tmpl'},
 		    &ui_yesno_radio("tmpl", 1));
 
-my @servers = &list_slave_servers();
+my @servers = &list_secondary_servers();
 if (@servers && $access{'remote'}) {
-	print &ui_table_row($text{'mass_onslave'},
-	    &ui_radio("onslave", 1,
-		[ [ 0, $text{'no'} ], [ 1, $text{'master_onslaveyes'} ] ])." ".
+	print &ui_table_row($text{'mass_onsecondary'},
+	    &ui_radio("onsecondary", 1,
+		[ [ 0, $text{'no'} ], [ 1, $text{'primary_onsecondaryyes'} ] ])." ".
 	    &ui_textbox("mip", $config{'this_ip'} ||
 		 &to_ipaddress(&get_system_hostname()), 30));
 	}

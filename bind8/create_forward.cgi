@@ -12,12 +12,12 @@ require './bind8-lib.pl';
 &ReadParse();
 &error_setup($text{'fcreate_err'});
 $access{'forward'} || &error($text{'fcreate_ecannot'});
-$access{'ro'} && &error($text{'master_ero'});
+$access{'ro'} && &error($text{'primary_ero'});
 my $conf = &get_config();
 my $vconf;
 if ($in{'view'} ne '') {
 	my $view = $conf->[$in{'view'}];
-	&can_edit_view($view) || &error($text{'master_eviewcannot'});
+	&can_edit_view($view) || &error($text{'primary_eviewcannot'});
 	$vconf = $view->{'members'};
 	}
 else {
@@ -45,22 +45,22 @@ else {
 		&error(&text('create_edom', $in{'zone'}));
 	}
 $in{'zone'} =~ s/\.$//;
-my @masters = split(/\s+/, $in{'masters'});
-foreach my $m (@masters) {
+my @primarys = split(/\s+/, $in{'primarys'});
+foreach my $m (@primarys) {
 	&check_ipaddress($m) || &check_ip6address($m) ||
-		&error(&text('create_emaster', $m));
+		&error(&text('create_eprimary', $m));
 	}
-#if (!@masters) {
+#if (!@primarys) {
 #	&error($text{'create_enone'});
 #	}
 foreach my $z (&find("zone", $vconf)) {
 	if (lc($z->{'value'}) eq lc($in{'zone'})) {
-		&error($text{'master_etaken'});
+		&error($text{'primary_etaken'});
 		}
 	}
 
 # Create structure
-my @mdirs = map { { 'name' => $_ } } @masters;
+my @mdirs = map { { 'name' => $_ } } @primarys;
 my $dir = { 'name' => 'zone',
 	 'values' => [ $in{'zone'} ],
 	 'type' => 1,

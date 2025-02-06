@@ -8,8 +8,8 @@ no warnings 'uninitialized';
 our (%access, %text, %config);
 
 require './bind8-lib.pl';
-$access{'master'} || &error($text{'hcreate_ecannot'});
-$access{'ro'} && &error($text{'master_ero'});
+$access{'primary'} || &error($text{'hcreate_ecannot'});
+$access{'ro'} && &error($text{'primary_ero'});
 &ui_print_header(undef, $text{'hcreate_title'}, "",
 		 undef, undef, undef, undef, &restart_links());
 

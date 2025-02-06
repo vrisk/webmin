@@ -12,8 +12,8 @@ our $module_root_directory;
 require './bind8-lib.pl';
 &ReadParse();
 &error_setup($text{'hcreate_err'});
-$access{'master'} || &error($text{'hcreate_ecannot'});
-$access{'ro'} && &error($text{'master_ero'});
+$access{'primary'} || &error($text{'hcreate_ecannot'});
+$access{'ro'} && &error($text{'primary_ero'});
 
 # Validate inputs
 &allowed_zone_file(\%access, $in{'file'}) ||

@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 # delete_zone.cgi
-# Delete an existing master, slave or secondary zone, and it's records file
+# Delete an existing primary, secondary or secondary zone, and it's records file
 
 use strict;
 use warnings;
@@ -17,27 +17,27 @@ require './bind8-lib.pl';
 my $zone = &get_zone_name_or_error($in{'zone'}, $in{'view'});
 my ($zconf, $conf, $parent) = &zone_to_config($zone);
 &can_edit_zone($zone) ||
-	&error($text{'master_edelete'});
+	&error($text{'primary_edelete'});
 
-$access{'ro'} && &error($text{'master_ero'});
-$access{'delete'} || &error($text{'master_edeletecannot'});
+$access{'ro'} && &error($text{'primary_ero'});
+$access{'delete'} || &error($text{'primary_edeletecannot'});
 
 my $rev = ($zconf->{'value'} =~ /in-addr\.arpa/i ||
 	$zconf->{'value'} =~ /\.$ipv6revzone/i);
 my $type = &find("type", $zconf->{'members'})->{'value'};
-$type = 'master' if ($type eq 'primary');
-$type = 'slave' if ($type eq 'secondary');
+$type = 'primary' if ($type eq 'primary');
+$type = 'secondary' if ($type eq 'secondary');
 if (!$in{'confirm'} && $config{'confirm_zone'}) {
 	# Ask the user if he is sure ..
 	&ui_print_header(undef, $text{'delete_title'}, "",
 			 undef, undef, undef, undef, &restart_links());
 
-	# Check if deleted on slaves too
-	my @servers = &list_slave_servers();
-	if ($type eq 'slave' || $type eq 'stub') {
+	# Check if deleted on secondarys too
+	my @servers = &list_secondary_servers();
+	if ($type eq 'secondary' || $type eq 'stub') {
 		@servers = grep { $_->{'sec'} } @servers;
 		}
-	elsif ($type ne 'master') {
+	elsif ($type ne 'primary') {
 		@servers = ( );
 		}
 
@@ -53,17 +53,17 @@ if (!$in{'confirm'} && $config{'confirm_zone'}) {
 	my $zdesc = "<tt>".&ip6int_to_net(&arpa_to_ip($zconf->{'value'}))."</tt>";
 	print &ui_confirmation_form("delete_zone.cgi",
 		$type eq 'hint' ? $text{'delete_mesg2'} :
-		$type eq 'master' ? &text('delete_mesg', $zdesc) :
+		$type eq 'primary' ? &text('delete_mesg', $zdesc) :
 				    &text('delete_mesg3', $zdesc),
 		[ [ 'zone', $in{'zone'} ],
 		  [ 'view', $in{'view'} ] ],
-		[ [ 'confirm', $text{'master_del'} ] ],
-		($type eq 'master' ?
+		[ [ 'confirm', $text{'primary_del'} ] ],
+		($type eq 'primary' ?
 			$text{$rev ? 'delete_fwd' : 'delete_rev'}." ".
 			&ui_yesno_radio("rev", 1)."<br>" : "").
 		(@servers && $access{'remote'} ?
-			$text{'delete_onslave'}." ".
-			&ui_yesno_radio("onslave", 1)."<br>" : ""),
+			$text{'delete_onsecondary'}." ".
+			&ui_yesno_radio("onsecondary", 1)."<br>" : ""),
 		$vwarn,
 		);
 
@@ -72,7 +72,7 @@ if (!$in{'confirm'} && $config{'confirm_zone'}) {
 	}
 
 my @recs;
-if (!$rev && $in{'rev'} && $type eq 'master') {
+if (!$rev && $in{'rev'} && $type eq 'primary') {
 	# find and delete reverse records
 	my $file = &find("file", $zconf->{'members'})->{'value'};
 	&lock_file(&make_chroot($file));
@@ -97,7 +97,7 @@ if (!$rev && $in{'rev'} && $type eq 'master') {
 			}
 		}
 	}
-elsif ($rev && $in{'rev'} && $type eq 'master') {
+elsif ($rev && $in{'rev'} && $type eq 'primary') {
 	# find and delete forward records
 	my $file = &find("file", $zconf->{'members'})->{'value'};
 	&lock_file(&make_chroot($file));
@@ -155,14 +155,14 @@ foreach my $u (keys %wusers) {
 		}
 	}
 
-# Also delete from slave servers
+# Also delete from secondary servers
 delete($ENV{'HTTP_REFERER'});
-if ($in{'onslave'} && $access{'remote'}) {
-	my @slaveerrs = &delete_on_slaves($zone->{'name'}, undef, $zone->{'view'});
-	if (@slaveerrs) {
-		&error(&text('delete_errslave',
+if ($in{'onsecondary'} && $access{'remote'}) {
+	my @secondaryerrs = &delete_on_secondarys($zone->{'name'}, undef, $zone->{'view'});
+	if (@secondaryerrs) {
+		&error(&text('delete_errsecondary',
 		     "<p>".join("<br>", map { "$_->[0]->{'host'} : $_->[1]" }
-				      @slaveerrs)));
+				      @secondaryerrs)));
 		}
 	}
 

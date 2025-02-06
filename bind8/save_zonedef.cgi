@@ -18,7 +18,7 @@ $access{'defaults'} || &error($text{'zonedef_ecannot'});
 my $conf = &get_config();
 my $options = &find("options", $conf);
 my @check;
-foreach my $c ("master", "slave", "response") {
+foreach my $c ("primary", "secondary", "response") {
 	push(@check, { 'name' => 'check-names',
 		       'values' => [ $c, $in{$c} ] }) if ($in{$c});
 	}
@@ -28,10 +28,10 @@ foreach my $c ("master", "slave", "response") {
 &save_addr_match("also-notify", $options, 1);
 &save_choice("notify", $options, 1);
 
-$in{'refresh'} =~ /^\d+$/ || &error(&text('master_erefresh', $in{'refresh'}));
-$in{'retry'} =~ /^\d+$/ || &error(&text('master_eretry', $in{'retry'}));
-$in{'expiry'} =~ /^\d+$/ || &error(&text('master_eexpiry', $in{'expiry'}));
-$in{'minimum'} =~ /^\d+$/ || &error(&text('master_eminimum', $in{'minimum'}));
+$in{'refresh'} =~ /^\d+$/ || &error(&text('primary_erefresh', $in{'refresh'}));
+$in{'retry'} =~ /^\d+$/ || &error(&text('primary_eretry', $in{'retry'}));
+$in{'expiry'} =~ /^\d+$/ || &error(&text('primary_eexpiry', $in{'expiry'}));
+$in{'minimum'} =~ /^\d+$/ || &error(&text('primary_eminimum', $in{'minimum'}));
 my %zonedef = ( 'refresh', $in{'refresh'},
 	     'retry', $in{'retry'},
 	     'expiry', $in{'expiry'},
@@ -49,7 +49,7 @@ my $j=0;
 for(my $i=0; defined($in{"name_$i"}); $i++) {
 	next if (!$in{"name_$i"});
 	$in{"type_$i"} eq 'A' || !$in{"def_$i"} ||
-		&error($text{'master_eiptmpl'});
+		&error($text{'primary_eiptmpl'});
 	$config{"tmpl_$j"} = join(' ', $in{"name_$i"}, $in{"type_$i"},
 			  $in{"value_${i}_def"} ? () : ( $in{"value_$i"} ) );
 	$j++;
@@ -60,7 +60,7 @@ if ($in{'include_def'}) {
 	}
 else {
 	-r $in{'include'} && !-d $in{'include'} ||
-		&error($text{'master_einclude'});
+		&error($text{'primary_einclude'});
 	$config{'tmpl_include'} = $in{'include'};
 	}
 if ($in{'prins_def'}) {

@@ -13,7 +13,7 @@ $access{'whois'} || &error($text{'whois_ecannot'});
 
 my $zone = &get_zone_name_or_error($in{'zone'}, $in{'view'});
 my $dom = $zone->{'name'};
-&can_edit_zone($zone) || &error($text{'master_ecannot'});
+&can_edit_zone($zone) || &error($text{'primary_ecannot'});
 
 my $tv = $zone->{'type'};
 $dom =~ s/\.$//;
@@ -35,4 +35,4 @@ print &ui_table_row(undef, "<pre>".&html_escape($out)."</pre>", 2);
 print &ui_table_end();
 
 &ui_print_footer(&redirect_url($tv, $in{'zone'}, $in{'view'}),
-		 $text{'master_return'});
+		 $text{'primary_return'});

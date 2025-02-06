@@ -1,7 +1,7 @@
-master_freezemsg2=Klepnutím na toto tlačítko před aktualizací dynamickou zónu zmrazíte.
-master_unfreezemsg2=Klepnutím na toto tlačítko uvolníte dynamickou zónu po její aktualizaci.
-master_checkzone=Zkontrolujte záznamy
-master_checkzonemsg=Klepnutím na toto tlačítko BIND zkontroluje záznamy v této zóně a podá zprávu o všech problémech.
+primary_freezemsg2=Klepnutím na toto tlačítko před aktualizací dynamickou zónu zmrazíte.
+primary_unfreezemsg2=Klepnutím na toto tlačítko uvolníte dynamickou zónu po její aktualizaci.
+primary_checkzone=Zkontrolujte záznamy
+primary_checkzonemsg=Klepnutím na toto tlačítko BIND zkontroluje záznamy v této zóně a podá zprávu o všech problémech.
 index_status=Postavení
 index_viewwarn=Upozornění - následující zóny nejsou v žádném zobrazení : $1
 index_viewwarn2=BIND nemusí být možné spustit, dokud nejsou přesunuty do pohledu.
@@ -13,19 +13,19 @@ index_eexpired=Upozornění: Následující zóny vypršely podpisy DNSSEC : $1
 index_eexpired_conf=Automatické podepisování by mělo být znovu povoleno na stránce $1.
 index_eexpired_mod=Pomocí modulu $1 zakažte pro tyto domény DNSSEC nebo zkontrolujte, proč se nepodepisuje podpis.
 
-master_inview=$1 v zobrazení $2
-master_egone=Zóna $1 v žádném pohledu neexistuje
-master_egone2=Zóna $1 neexistuje!
-master_egone3=Zóna $1 v pohledu $2 neexistuje!
-master_notify3=Povolit oznámení od ..
-master_noinclude=Stačí použít záznamy výše
-master_convertdesc=Promění tuto hlavní zónu na otrok, takže bude přijímat záznamy z jiného hlavního serveru, místo aby je obsluhovala místně.
-master_movedesc=Přesune tuto zónu do jiného zobrazení a přitom zachová všechny záznamy a další možnosti.
-master_applymsg2=Klepnutím na toto tlačítko použijete změny pouze pro tuto zónu. Toto bude fungovat, pouze pokud byly změny provedeny pro celý server alespoň jednou od vytvoření zóny.
-master_esoagone=Nebyl nalezen žádný záznam SOA!
-master_einclude=Další soubor šablony neexistuje
-master_vmin=Tuto zónu spravuje Virtualmin. Záznamy by měly být upravovány pomocí uživatelského rozhraní Virtualmin, aby bylo zajištěno, že budou konzistentní s ostatními nastaveními virtuálního serveru.
-master_vminalias=Tato zóna je alias domény Virtualmin, která je synchronizována s jejím cílem. Záznamy by zde nikdy neměly být upravovány, protože jakékoli změny budou přepsány!
+primary_inview=$1 v zobrazení $2
+primary_egone=Zóna $1 v žádném pohledu neexistuje
+primary_egone2=Zóna $1 neexistuje!
+primary_egone3=Zóna $1 v pohledu $2 neexistuje!
+primary_notify3=Povolit oznámení od ..
+primary_noinclude=Stačí použít záznamy výše
+primary_convertdesc=Promění tuto hlavní zónu na otrok, takže bude přijímat záznamy z jiného hlavního serveru, místo aby je obsluhovala místně.
+primary_movedesc=Přesune tuto zónu do jiného zobrazení a přitom zachová všechny záznamy a další možnosti.
+primary_applymsg2=Klepnutím na toto tlačítko použijete změny pouze pro tuto zónu. Toto bude fungovat, pouze pokud byly změny provedeny pro celý server alespoň jednou od vytvoření zóny.
+primary_esoagone=Nebyl nalezen žádný záznam SOA!
+primary_einclude=Další soubor šablony neexistuje
+primary_vmin=Tuto zónu spravuje Virtualmin. Záznamy by měly být upravovány pomocí uživatelského rozhraní Virtualmin, aby bylo zajištěno, že budou konzistentní s ostatními nastaveními virtuálního serveru.
+primary_vminalias=Tato zóna je alias domény Virtualmin, která je synchronizována s jejím cílem. Záznamy by zde nikdy neměly být upravovány, protože jakékoli změny budou přepsány!
 
 delete_mesg3=Opravdu chcete odstranit zónu $1?
 delete_vwarn=Tato zóna je přidružena k doméně Virtualmin $1, a proto by zde neměla být odstraněna!
@@ -35,12 +35,12 @@ mcreate_dnssec_tools_enable=Povolte DNSSEC pomocí nástrojů DNSSEC
 mcreate_ednssecsize=Nepodařilo se vypočítat velikost klíče : $1
 mcreate_ednssec=Vytvoření záznamu bylo úspěšné, ale DNSSEC selhal : $1
 
-slave_format=Formát souboru zóny
-slave_raw=Syrové binární
-slave_text=Prostý text
-slave_convertdesc=Klepnutím na toto tlačítko převedete tuto podřízenou zónu na master se všemi záznamy, které byly naposledy přeneseny z původního master systému.
-slave_applymsg2=Klepnutím na toto tlačítko vynutíte opětovný přenos zóny z hlavního serveru, aby získala všechny nejnovější záznamy.
-slave_xfer=Přenos testovací zóny
+secondary_format=Formát souboru zóny
+secondary_raw=Syrové binární
+secondary_text=Prostý text
+secondary_convertdesc=Klepnutím na toto tlačítko převedete tuto podřízenou zónu na primary se všemi záznamy, které byly naposledy přeneseny z původního primary systému.
+secondary_applymsg2=Klepnutím na toto tlačítko vynutíte opětovný přenos zóny z hlavního serveru, aby získala všechny nejnovější záznamy.
+secondary_xfer=Přenos testovací zóny
 
 recs_none=Doména zatím nemá žádné záznamy $1.
 recs_nosearch=Vyhledávacímu dotazu neodpovídají žádné záznamy.
@@ -246,10 +246,10 @@ hint_deletedesc=Klepnutím na toto tlačítko odstraníte tuto kořenovou zónu.
 
 hcreate_header=Podrobnosti o kořenové zóně
 
-slaves_ok=Přidat nyní
-slaves_group=Ve skupině &lt;$1&gt;
-slaves_sameview=Zobrazit se stejným názvem
-slaves_header=Možnosti serveru clusteru slave
+secondarys_ok=Přidat nyní
+secondarys_group=Ve skupině &lt;$1&gt;
+secondarys_sameview=Zobrazit se stejným názvem
+secondarys_header=Možnosti serveru clusteru secondary
 
 add_eversion2=Server $1 není spuštěn Webmin verze $2 nebo vyšší, což je nutné pro přidání zón do více než jednoho pohledu
 add_eipaddr=Server $1 má místo názvu hostitele IP adresu
@@ -452,7 +452,7 @@ trusted_warning=Varování! Konfigurace klienta BIND DNSSEC obsahuje zastaralé 
 trusted_fix=Opravte konfiguraci DNSSEC
 
 xfer_title=Přenos testovací zóny
-xfer_doing=Testování přenosu slave zóny z $1 ..
+xfer_doing=Testování přenosu secondary zóny z $1 ..
 xfer_failed=.. z $1: Selhalo : $2
 xfer_done=.. z $1: Dokončeno OK
 xfer_count=Testovací přenos byl úspěšně načten z záznamů $1 z alespoň jednoho jmenného serveru. Skutečné převody prostřednictvím BIND by měly být také úspěšné.

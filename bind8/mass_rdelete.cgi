@@ -17,10 +17,10 @@ foreach my $d (split(/\0/, $in{'d'})) {
 	my $zone = &get_zone_name_or_error($zonename, $viewidx);
 	$zone || &error($text{'umass_egone'});
 	&can_edit_zone($zone) ||
-		&error($text{'master_edelete'});
+		&error($text{'primary_edelete'});
 	push(@zones, $zone);
 	}
-$access{'ro'} && &error($text{'master_ero'});
+$access{'ro'} && &error($text{'primary_ero'});
 $in{'name_def'} || $in{'name'} || &error($text{'rdmass_ename'});
 
 # Do each one
@@ -28,9 +28,9 @@ $in{'name_def'} || $in{'name'} || &error($text{'rdmass_ename'});
 
 foreach my $zi (@zones) {
 	print &text('rdmass_doing', "<tt>$zi->{'name'}</tt>"),"<br>\n";
-	if ($zi->{'type'} ne 'master' && $zi->{'type'} ne 'primary') {
-		# Skip - not a master zone
-		print $text{'umass_notmaster'},"<p>\n";
+	if ($zi->{'type'} ne 'primary' && $zi->{'type'} ne 'primary') {
+		# Skip - not a primary zone
+		print $text{'umass_notprimary'},"<p>\n";
 		next;
 		}
 	my $rcount = 0;

@@ -54,11 +54,11 @@ my @hashint = grep { $_->{'type'} ne 'view' &&
 		  $_->{'name'} eq '.' } @allzones;
 
 if (@zones == 1 && $access{'zones'} ne '*' && !$access{'defaults'} &&
-    !$access{'views'} && $access{'apply'} != 1 && !$access{'master'} &&
-    !$access{'slave'} && !$access{'forward'} && $access{'noconfig'}) {
+    !$access{'views'} && $access{'apply'} != 1 && !$access{'primary'} &&
+    !$access{'secondary'} && !$access{'forward'} && $access{'noconfig'}) {
 	# Only one zone, so go direct to it
 	my $z = $zones[0];
-	&redirect("edit_master.cgi?zone=$z->{'name'}".
+	&redirect("edit_primary.cgi?zone=$z->{'name'}".
 		  ($z->{'viewindex'} eq '' ? '' : '&view='.$z->{'viewindex'}));
 	exit;
 	}
@@ -91,7 +91,7 @@ if (@zones && $access{'zones'} eq '*' && !$access{'ro'}) {
 	my @missing;
 	foreach my $z (@zones) {
                 my $zonefile = &make_chroot(&absolute_path($z->{'file'}));
-                if ($z->{'type'} eq 'master' && $z->{'file'} && !-r $zonefile) {
+                if ($z->{'type'} eq 'primary' && $z->{'file'} && !-r $zonefile) {
 			push(@missing, $z);
 			}
 		}
@@ -121,7 +121,7 @@ if ($access{'defaults'}) {
 	my @olinks = ("conf_servers.cgi", "conf_logging.cgi", "conf_acls.cgi",
 		   "conf_files.cgi", "conf_forwarding.cgi", "conf_net.cgi",
 		   "conf_misc.cgi", "conf_controls.cgi", "conf_keys.cgi",
-		   "conf_zonedef.cgi", "list_slaves.cgi",
+		   "conf_zonedef.cgi", "list_secondarys.cgi",
 		   $bind_version >= 9 ? ( "conf_rndc.cgi" ) : ( ),
 		   &supports_dnssec_client() ? ( "conf_trusted.cgi" ) : ( ),
 				   ((&supports_dnssec()) && (&have_dnssec_tools_support())) ? ( "conf_dnssectools.cgi" ) : ( ),
@@ -136,11 +136,11 @@ if ($access{'defaults'}) {
 
 # Work out what creation links we have
 my @crlinks = ( );
-if ($access{'master'} && !$access{'ro'}) {
-	push(@crlinks, &ui_link("master_form.cgi", $text{'index_addmaster'}) );
+if ($access{'primary'} && !$access{'ro'}) {
+	push(@crlinks, &ui_link("primary_form.cgi", $text{'index_addprimary'}) );
 	}
-if ($access{'slave'} && !$access{'ro'}) {
-	push(@crlinks, &ui_link("slave_form.cgi", $text{'index_addslave'}) );
+if ($access{'secondary'} && !$access{'ro'}) {
+	push(@crlinks, &ui_link("secondary_form.cgi", $text{'index_addsecondary'}) );
 	push(@crlinks, &ui_link("stub_form.cgi", $text{'index_addstub'}) );
 	}
 if ($access{'forward'} && !$access{'ro'}) {
@@ -149,7 +149,7 @@ if ($access{'forward'} && !$access{'ro'}) {
 if ($access{'delegation'} && !$access{'ro'} && &version_atleast(9, 2, 1)) {
 	push(@crlinks, &ui_link("delegation_form.cgi", $text{'index_adddele'}) );
 	}
-if ($access{'master'} && !$access{'ro'} &&
+if ($access{'primary'} && !$access{'ro'} &&
     scalar(@hashint) < (@views ? scalar(@views) : 1)) {
 	push(@crlinks, &ui_link("hint_form.cgi", $text{'index_addhint'}) );
 	}
@@ -187,8 +187,8 @@ elsif (@zones && (!@views || !$config{'by_view'})) {
 		my $t = $z->{'type'};
 		next if (!$t);
 		$t = "delegation" if ($t eq "delegation-only");
-		$t = "master" if ($t eq "primary");
-		$t = "slave" if ($t eq "secondary");
+		$t = "primary" if ($t eq "primary");
+		$t = "secondary" if ($t eq "secondary");
 		my $zn = $v eq "." ? "<i>$text{'index_root'}</i>"
 				      : &ip6int_to_net(&arpa_to_ip($v));
 		if ($z->{'view'}) {
@@ -353,8 +353,8 @@ elsif (@zones) {
 			my $v = $z->{'name'};
 			my $t = $z->{'type'};
 			$t = "delegation" if ($t eq "delegation-only");
-			$t = "master" if ($t eq "primary");
-			$t = "slave" if ($t eq "secondary");
+			$t = "primary" if ($t eq "primary");
+			$t = "secondary" if ($t eq "secondary");
 			my $zn = $v eq "." ? "<i>$text{'index_root'}</i>"
 					      : &ip6int_to_net(&arpa_to_ip($v));
 			push(@zlinks, "edit_$t.cgi?zone=$z->{'name'}".

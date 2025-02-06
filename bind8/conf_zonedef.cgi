@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 # conf_zonedef.cgi
-# Display defaults for master zones
+# Display defaults for primary zones
 use strict;
 use warnings;
 no warnings 'redefine';
@@ -20,22 +20,22 @@ my %zd;
 &get_zone_defaults(\%zd);
 
 # Default refresh time
-print &ui_table_row($text{'master_refresh'},
+print &ui_table_row($text{'primary_refresh'},
 	&ui_textbox("refresh", $zd{'refresh'}, 10)." ".
 	&time_unit_choice("refunit", $zd{'refunit'}));
 
 # Default retry time
-print &ui_table_row($text{'master_retry'},
+print &ui_table_row($text{'primary_retry'},
 	&ui_textbox("retry", $zd{'retry'}, 10)." ".
 	&time_unit_choice("retunit", $zd{'retunit'}));
 
 # Default expiry time
-print &ui_table_row($text{'master_expiry'},
+print &ui_table_row($text{'primary_expiry'},
 	&ui_textbox("expiry", $zd{'expiry'}, 10)." ".
 	&time_unit_choice("expunit", $zd{'expunit'}));
 
 # Default minimum time (what is this really?)
-print &ui_table_row($text{'master_minimum'},
+print &ui_table_row($text{'primary_minimum'},
 	&ui_textbox("minimum", $zd{'minimum'}, 10)." ".
 	&time_unit_choice("minunit", $zd{'minunit'}));
 
@@ -48,18 +48,18 @@ for(my $i=0; $i<2 || $config{"tmpl_".($i-1)}; $i++) {
 			[ map { [ $_, $text{"type_".$_} ] }
 			    ('A', 'CNAME', 'MX', 'NS', 'TXT', 'HINFO') ]),
 		       &ui_opt_textbox("value_$i", $c[2], 15,
-				       $text{'master_user'}),
+				       $text{'primary_user'}),
 		     ]);
 	}
-print &ui_table_row($text{'master_tmplrecs'},
-	&ui_columns_table([ $text{'master_name'}, $text{'master_type'},
-			    $text{'master_value'} ],
+print &ui_table_row($text{'primary_tmplrecs'},
+	&ui_columns_table([ $text{'primary_name'}, $text{'primary_type'},
+			    $text{'primary_value'} ],
 			  undef, \@table, undef, 1), 3);
 
 # Additional include file
-print &ui_table_row($text{'master_include'},
+print &ui_table_row($text{'primary_include'},
 	&ui_opt_textbox("include", $config{'tmpl_include'}, 40,
-			$text{'master_noinclude'})." ".
+			$text{'primary_noinclude'})." ".
 	&file_chooser_button("include"), 3);
 
 # Default email address
@@ -126,10 +126,10 @@ print &ui_table_start($text{'zonedef_msg2'}, "width=100%", 4);
 
 print &addr_match_input($text{'zonedef_transfer'}, "allow-transfer", $mems);
 print &addr_match_input($text{'zonedef_query'}, "allow-query", $mems);
-print &addr_match_input($text{'master_notify2'}, "also-notify", $mems);
+print &addr_match_input($text{'primary_notify2'}, "also-notify", $mems);
 
-print &ignore_warn_fail($text{'zonedef_cmaster'}, 'master', $check{'master'});
-print &ignore_warn_fail($text{'zonedef_cslave'}, 'slave', $check{'slave'});
+print &ignore_warn_fail($text{'zonedef_cprimary'}, 'primary', $check{'primary'});
+print &ignore_warn_fail($text{'zonedef_csecondary'}, 'secondary', $check{'secondary'});
 
 print &ignore_warn_fail($text{'zonedef_cresponse'}, 'response',
 			$check{'response'});

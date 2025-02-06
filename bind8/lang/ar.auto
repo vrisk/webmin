@@ -7,20 +7,20 @@ index_webmin=قم بالإعداد كخادم اسم إنترنت ، ولكن ا
 index_create=إنشاء ملف التكوين الأساسي وبدء خادم الأسماء
 index_zones=مناطق DNS الحالية
 index_none=لا توجد مناطق DNS محددة لخادم الاسم هذا
-index_addmaster=إنشاء منطقة رئيسية.
-index_addslave=إنشاء منطقة الرقيق.
+index_addprimary=إنشاء منطقة رئيسية.
+index_addsecondary=إنشاء منطقة الرقيق.
 index_addstub=إنشاء منطقة كعب الروتين.
 index_addfwd=إنشاء منطقة الأمام.
 index_adddele=إنشاء منطقة التفويض.
 index_addmass=إنشاء مناطق من ملف دفعي.
 index_apply=تطبيق التغييرات
 index_applymsg=انقر فوق هذا الزر لإعادة تشغيل خادم BIND الجاري تشغيله. سيؤدي هذا التكوين الحالي لتصبح نشطة
-master_freeze=تجميد المنطقة
-master_freezemsg2=انقر فوق هذا الزر لتجميد منطقة ديناميكية قبل تحديثها.
-master_unfreeze=تجميد المنطقة
-master_unfreezemsg2=انقر فوق هذا الزر لإلغاء تجميد منطقة ديناميكية بعد تحديثها.
-master_checkzone=تحقق السجلات
-master_checkzonemsg=انقر فوق هذا الزر لجعل BIND يقوم بفحص السجلات في هذه المنطقة ، والإبلاغ عن أي مشاكل.
+primary_freeze=تجميد المنطقة
+primary_freezemsg2=انقر فوق هذا الزر لتجميد منطقة ديناميكية قبل تحديثها.
+primary_unfreeze=تجميد المنطقة
+primary_unfreezemsg2=انقر فوق هذا الزر لإلغاء تجميد منطقة ديناميكية بعد تحديثها.
+primary_checkzone=تحقق السجلات
+primary_checkzonemsg=انقر فوق هذا الزر لجعل BIND يقوم بفحص السجلات في هذه المنطقة ، والإبلاغ عن أي مشاكل.
 index_applymsg2=انقر فوق هذا الزر لإعادة تشغيل خادم BIND قيد التشغيل وكافة عبيد الكتلة. سيؤدي هذا التكوين الحالي لتصبح نشطة.
 index_start=بدء خادم الاسم
 index_startmsg=انقر فوق هذا الزر لبدء خادم BIND ، وقم بتحميل التكوين الحالي.
@@ -29,8 +29,8 @@ index_stopmsg=انقر فوق هذا الزر لإيقاف خادم BIND. لن �
 index_zone=منطقة
 index_type=اكتب
 index_status=الحالة
-index_master=رئيس
-index_slave=عبد
+index_primary=رئيس
+index_secondary=عبد
 index_stub=رطم
 index_hint=جذر
 index_forward=إلى الأمام
@@ -66,89 +66,89 @@ index_eexpired=Warning : The following zones have expired DNSSEC signatures : $1
 index_eexpired_conf=Automatic signing should be re-enabled on the $1 page.
 index_eexpired_mod=Use the $1 module to either disable DNSSEC for these domains, or check why signing is failing.
 
-master_title=تحرير ماجستير المنطقة
-master_inview=$1 في العرض$2
-master_ecannot=غير مسموح لك بتحرير هذه المنطقة
-master_egone=Zone $1 does not exist in any view
-master_egone2=Zone $1 does not exist!
-master_egone3=Zone $1 in view $2 does not exist!
-master_eviewcannot=غير مسموح لك بإنشاء منطقة في طريقة العرض هذه
-master_manual=تحرير ملف سجلات المنطقة
-master_soa=تحرير معلمات المنطقة
-master_serial=الرقم التسلسلي للمنطقة
-master_options=تحرير خيارات المنطقة
-master_del=حذف المنطقة
-master_delmsg=انقر فوق هذا الزر لحذف هذه المنطقة من خادم DNS الخاص بك.
-master_delrev=سيتم أيضًا حذف مطابقة سجلات العناوين العكسية في المناطق الأخرى التي يستضيفها هذا الخادم.
-master_tmpl=استخدام قالب المنطقة؟
-master_ip=عنوان IP لسجلات القالب
-master_addrev=إضافة عكس لعناوين القالب؟
-master_params=معلمات المنطقة
-master_server=الخادم الرئيسي
-master_onslave=أيضا إنشاء على خوادم الرقيق؟
-master_onslaveyes=نعم ، مع عناوين IP الرئيسية
-master_slavefile=ملف السجلات على خوادم الرقيق
-master_ns=إضافة سجل NS للخادم الرئيسي؟
-master_email=عنوان البريد الإلكتروني
-master_refresh=تحديث الوقت
-master_retry=نقل وقت المحاولة
-master_expiry=وقت انتهاء الصلاحية
-master_minimum=وقت التخزين المؤقت السلبي
-master_opts=خيارات المنطقة
-master_check=تحقق من الأسماء؟
-master_notify=إخطار العبيد من التغييرات؟
-master_update=السماح بالتحديثات من ..
-master_transfer=السماح بالتحويلات من ..
-master_query=السماح بالاستعلامات من ..
-master_notify2=أيضا إخطار العبيد ..
-master_notify3=السماح بالإشعارات من ..
-master_type=اكتب
-master_records=تسجيل
-master_return=أنواع السجلات
-master_err=فشل في حفظ الخيارات
-master_ero=غير مسموح لك بتحديث المناطق
-master_err2=فشل في تحديث المنطقة
-master_emaster='$1' is not a valid master server
-master_eemail='$1' is not a valid email address
-master_erefresh='$1' is not a valid refresh time
-master_eretry='$1' is not a valid transfer retry time
-master_eexpiry='$1' is not a valid expiry time
-master_eminimum='$1' is not a valid default TTL
-master_edelete=غير مسموح لك بحذف هذه المنطقة
-master_tmplrecs=سجلات القالب
-master_name=اسم السجل
-master_value=القيمة
-master_user=من الشكل
-master_eip=عنوان IP للقالب مفقود أو غير صالح
-master_eiptmpl=يمكن أن تأتي قيمة سجل القالب من سجلات العناوين فقط
-master_esoacannot=غير مسموح لك بتحرير معلمات المنطقة
-master_eoptscannot=غير مسموح لك بتحرير خيارات المنطقة
-master_edeletecannot=غير مسموح لك بحذف المناطق
-master_etaken=هذه المنطقة موجودة بالفعل
-master_include=ملف قالب إضافي
-master_noinclude=مجرد استخدام السجلات أعلاه
-master_convert=تحويل إلى منطقة الرقيق
-master_convertdesc=يحول هذه المنطقة الرئيسية إلى عبد ، بحيث تتلقى سجلات من خادم رئيسي آخر بدلاً من خدمتها محليًا.
-master_whois=البحث عن معلومات WHOIS
-master_move=الانتقال للعرض:
-master_movedesc=ينقل هذه المنطقة إلى طريقة عرض أخرى ، مع الحفاظ على جميع السجلات والخيارات الأخرى.
-master_emove=يجب تحديد طريقة عرض مختلفة للانتقال إليها
-master_eallowupdate=يجب إدخال عنوان واحد على الأقل للسماح بالتحديثات من
-master_eallowtransfer=يجب إدخال عنوان واحد على الأقل للسماح بالتحويلات من
-master_errslave=Master zone created OK, but the following errors occurred on slaves : $1
-master_emips=لم يتم إدخال عناوين IP رئيسية لخادم الرقيق
-master_emip=Invalid master IP '$1'
-master_esetup=لم يتم إعداد وحدة BIND
-master_eview=View $1 was not found
-master_eserial=يجب أن يكون الرقم التسلسلي سلسلة من الأرقام
-master_apply=تطبيق التغييرات
-master_applymsg2=انقر فوق هذا الزر لتطبيق التغييرات على هذه المنطقة فقط. لن يعمل هذا إلا إذا تم تطبيق التغييرات على الخادم بأكمله مرة واحدة على الأقل منذ إنشاء المنطقة.
-master_defttl=الوقت الافتراضي للعيش للسجلات
-master_edefttl='$1' is not a valid default time-to-live for records
-master_esoagone=لم يتم العثور على سجل الخدمية!
-master_einclude=ملف القالب الإضافي غير موجود
-master_vmin=تتم إدارة هذه المنطقة بواسطة Virtualmin. يجب تحرير السجلات باستخدام Virtualmin UI ، للتأكد من أنها متوافقة مع إعدادات الخادم الظاهري الأخرى.
-master_vminalias=هذه المنطقة هي اسم مستعار لنطاق Virtualmin ، والذي يتم الاحتفاظ به متزامنًا مع هدفه. يجب عدم تحرير السجلات هنا مطلقًا ، حيث سيتم الكتابة فوق أي تغييرات!
+primary_title=تحرير ماجستير المنطقة
+primary_inview=$1 في العرض$2
+primary_ecannot=غير مسموح لك بتحرير هذه المنطقة
+primary_egone=Zone $1 does not exist in any view
+primary_egone2=Zone $1 does not exist!
+primary_egone3=Zone $1 in view $2 does not exist!
+primary_eviewcannot=غير مسموح لك بإنشاء منطقة في طريقة العرض هذه
+primary_manual=تحرير ملف سجلات المنطقة
+primary_soa=تحرير معلمات المنطقة
+primary_serial=الرقم التسلسلي للمنطقة
+primary_options=تحرير خيارات المنطقة
+primary_del=حذف المنطقة
+primary_delmsg=انقر فوق هذا الزر لحذف هذه المنطقة من خادم DNS الخاص بك.
+primary_delrev=سيتم أيضًا حذف مطابقة سجلات العناوين العكسية في المناطق الأخرى التي يستضيفها هذا الخادم.
+primary_tmpl=استخدام قالب المنطقة؟
+primary_ip=عنوان IP لسجلات القالب
+primary_addrev=إضافة عكس لعناوين القالب؟
+primary_params=معلمات المنطقة
+primary_server=الخادم الرئيسي
+primary_onsecondary=أيضا إنشاء على خوادم الرقيق؟
+primary_onsecondaryyes=نعم ، مع عناوين IP الرئيسية
+primary_secondaryfile=ملف السجلات على خوادم الرقيق
+primary_ns=إضافة سجل NS للخادم الرئيسي؟
+primary_email=عنوان البريد الإلكتروني
+primary_refresh=تحديث الوقت
+primary_retry=نقل وقت المحاولة
+primary_expiry=وقت انتهاء الصلاحية
+primary_minimum=وقت التخزين المؤقت السلبي
+primary_opts=خيارات المنطقة
+primary_check=تحقق من الأسماء؟
+primary_notify=إخطار العبيد من التغييرات؟
+primary_update=السماح بالتحديثات من ..
+primary_transfer=السماح بالتحويلات من ..
+primary_query=السماح بالاستعلامات من ..
+primary_notify2=أيضا إخطار العبيد ..
+primary_notify3=السماح بالإشعارات من ..
+primary_type=اكتب
+primary_records=تسجيل
+primary_return=أنواع السجلات
+primary_err=فشل في حفظ الخيارات
+primary_ero=غير مسموح لك بتحديث المناطق
+primary_err2=فشل في تحديث المنطقة
+primary_eprimary='$1' is not a valid primary server
+primary_eemail='$1' is not a valid email address
+primary_erefresh='$1' is not a valid refresh time
+primary_eretry='$1' is not a valid transfer retry time
+primary_eexpiry='$1' is not a valid expiry time
+primary_eminimum='$1' is not a valid default TTL
+primary_edelete=غير مسموح لك بحذف هذه المنطقة
+primary_tmplrecs=سجلات القالب
+primary_name=اسم السجل
+primary_value=القيمة
+primary_user=من الشكل
+primary_eip=عنوان IP للقالب مفقود أو غير صالح
+primary_eiptmpl=يمكن أن تأتي قيمة سجل القالب من سجلات العناوين فقط
+primary_esoacannot=غير مسموح لك بتحرير معلمات المنطقة
+primary_eoptscannot=غير مسموح لك بتحرير خيارات المنطقة
+primary_edeletecannot=غير مسموح لك بحذف المناطق
+primary_etaken=هذه المنطقة موجودة بالفعل
+primary_include=ملف قالب إضافي
+primary_noinclude=مجرد استخدام السجلات أعلاه
+primary_convert=تحويل إلى منطقة الرقيق
+primary_convertdesc=يحول هذه المنطقة الرئيسية إلى عبد ، بحيث تتلقى سجلات من خادم رئيسي آخر بدلاً من خدمتها محليًا.
+primary_whois=البحث عن معلومات WHOIS
+primary_move=الانتقال للعرض:
+primary_movedesc=ينقل هذه المنطقة إلى طريقة عرض أخرى ، مع الحفاظ على جميع السجلات والخيارات الأخرى.
+primary_emove=يجب تحديد طريقة عرض مختلفة للانتقال إليها
+primary_eallowupdate=يجب إدخال عنوان واحد على الأقل للسماح بالتحديثات من
+primary_eallowtransfer=يجب إدخال عنوان واحد على الأقل للسماح بالتحويلات من
+primary_errsecondary=primary zone created OK, but the following errors occurred on secondarys : $1
+primary_emips=لم يتم إدخال عناوين IP رئيسية لخادم الرقيق
+primary_emip=Invalid primary IP '$1'
+primary_esetup=لم يتم إعداد وحدة BIND
+primary_eview=View $1 was not found
+primary_eserial=يجب أن يكون الرقم التسلسلي سلسلة من الأرقام
+primary_apply=تطبيق التغييرات
+primary_applymsg2=انقر فوق هذا الزر لتطبيق التغييرات على هذه المنطقة فقط. لن يعمل هذا إلا إذا تم تطبيق التغييرات على الخادم بأكمله مرة واحدة على الأقل منذ إنشاء المنطقة.
+primary_defttl=الوقت الافتراضي للعيش للسجلات
+primary_edefttl='$1' is not a valid default time-to-live for records
+primary_esoagone=لم يتم العثور على سجل الخدمية!
+primary_einclude=ملف القالب الإضافي غير موجود
+primary_vmin=تتم إدارة هذه المنطقة بواسطة Virtualmin. يجب تحرير السجلات باستخدام Virtualmin UI ، للتأكد من أنها متوافقة مع إعدادات الخادم الظاهري الأخرى.
+primary_vminalias=هذه المنطقة هي اسم مستعار لنطاق Virtualmin ، والذي يتم الاحتفاظ به متزامنًا مع هدفه. يجب عدم تحرير السجلات هنا مطلقًا ، حيث سيتم الكتابة فوق أي تغييرات!
 
 delete_title=حذف المنطقة
 delete_mesg=Are you sure you want to delete the zone $1 ? All records and the zone file will be deleted.
@@ -156,8 +156,8 @@ delete_mesg2=هل أنت متأكد أنك تريد حذف منطقة الجذر
 delete_mesg3=Are you sure you want to delete the zone $1 ?
 delete_rev=حذف السجلات العكسية في مناطق أخرى؟
 delete_fwd=حذف السجلات إلى الأمام في مناطق أخرى؟
-delete_onslave=حذف أيضا من خوادم الرقيق؟
-delete_errslave=Master zone deleted OK, but the following errors occurred on slaves : $1
+delete_onsecondary=حذف أيضا من خوادم الرقيق؟
+delete_errsecondary=primary zone deleted OK, but the following errors occurred on secondarys : $1
 delete_ezone=لم يتم العثور على المنطقة على خادم الرقيق
 delete_vwarn=هذه المنطقة مرتبطة بمجال Virtualmin $1 ، لذا لا ينبغي حذفها هنا!
 delete_vwarn2=هذه المنطقة مرتبطة بمجال Virtualmin $1 و$2 آخرين ، لذا لا ينبغي حذفها هنا!
@@ -177,40 +177,40 @@ mcreate_err=فشل في إنشاء منطقة رئيسية
 mcreate_ednssecsize=Failed to compute key size : $1
 mcreate_ednssec=Record creation succeeded, but DNSSEC failed : $1
 
-slave_title=تحرير منطقة الرقيق
+secondary_title=تحرير منطقة الرقيق
 stub_title=تحرير منطقة كعب الروتين
-slave_ecannot=غير مسموح لك بتحرير هذه المنطقة
-slave_opts=خيارات المنطقة
-slave_masters=خوادم ماجستير
-slave_masterport=منفذ الخادم
-slave_max=أقصى وقت نقل
-slave_file=ملف السجلات
-slave_check=تحقق من الأسماء؟
-slave_notify=إخطار العبيد من التغييرات؟
-slave_format=تنسيق ملف المنطقة
-slave_raw=ثنائي خام
-slave_text=نص عادي
-slave_update=السماح بالتحديثات من ..
-slave_transfer=السماح بالتحويلات من ..
-slave_query=السماح بالاستعلامات من ..
-slave_notify2=أيضا إخطار العبيد ..
-slave_none=لا شيء
-slave_auto=تلقائي
-slave_err=فشل في حفظ الخيارات
-slave_emax='$1' is not a valid max transfer time
-slave_efile=ملف السجلات المفقودة
-slave_efile2='$1' is not an allowable records file
-slave_mins=الدقائق
-slave_master_port=ميناء
-slave_convert=تحويل إلى المنطقة الرئيسية
-slave_convertdesc=انقر فوق هذا الزر لتحويل منطقة العبيد هذه إلى سيد ، مع كل السجلات التي تم نقلها آخر مرة من النظام الرئيسي الأصلي.
-slave_manual=عرض ملف السجلات
-slave_delmsg=انقر فوق هذا الزر لحذف هذه المنطقة من خادم DNS الخاص بك. لن يتم لمس المنطقة الرئيسية للمصدر.
-slave_apply=تحديث بالقوة
-slave_applymsg2=انقر فوق هذا الزر لفرض إعادة نقل المنطقة من الخادم الرئيسي ، بحيث تحصل على أحدث السجلات.
-slave_last=Last transferred : $1
-slave_never=أبدا
-slave_xfer=نقل منطقة الاختبار
+secondary_ecannot=غير مسموح لك بتحرير هذه المنطقة
+secondary_opts=خيارات المنطقة
+secondary_primarys=خوادم ماجستير
+secondary_primaryport=منفذ الخادم
+secondary_max=أقصى وقت نقل
+secondary_file=ملف السجلات
+secondary_check=تحقق من الأسماء؟
+secondary_notify=إخطار العبيد من التغييرات؟
+secondary_format=تنسيق ملف المنطقة
+secondary_raw=ثنائي خام
+secondary_text=نص عادي
+secondary_update=السماح بالتحديثات من ..
+secondary_transfer=السماح بالتحويلات من ..
+secondary_query=السماح بالاستعلامات من ..
+secondary_notify2=أيضا إخطار العبيد ..
+secondary_none=لا شيء
+secondary_auto=تلقائي
+secondary_err=فشل في حفظ الخيارات
+secondary_emax='$1' is not a valid max transfer time
+secondary_efile=ملف السجلات المفقودة
+secondary_efile2='$1' is not an allowable records file
+secondary_mins=الدقائق
+secondary_primary_port=ميناء
+secondary_convert=تحويل إلى المنطقة الرئيسية
+secondary_convertdesc=انقر فوق هذا الزر لتحويل منطقة العبيد هذه إلى سيد ، مع كل السجلات التي تم نقلها آخر مرة من النظام الرئيسي الأصلي.
+secondary_manual=عرض ملف السجلات
+secondary_delmsg=انقر فوق هذا الزر لحذف هذه المنطقة من خادم DNS الخاص بك. لن يتم لمس المنطقة الرئيسية للمصدر.
+secondary_apply=تحديث بالقوة
+secondary_applymsg2=انقر فوق هذا الزر لفرض إعادة نقل المنطقة من الخادم الرئيسي ، بحيث تحصل على أحدث السجلات.
+secondary_last=Last transferred : $1
+secondary_never=أبدا
+secondary_xfer=نقل منطقة الاختبار
 
 screate_title1=إنشاء منطقة الرقيق
 screate_title2=إنشاء منطقة كعب الروتين
@@ -326,7 +326,7 @@ edit_enaptrvalue4=يمكن تعيين حقل واحد فقط من حقلي regex
 text_title=تحرير ملف السجلات
 text_title2=عرض ملف السجلات
 text_desc3=This form allows you to manually edit the DNS records file $1. No syntax checking will be done by Webmin.
-text_desc2=This page shows the DNS records file $1, created by BIND when the zone was transferred from the master server.
+text_desc2=This page shows the DNS records file $1, created by BIND when the zone was transferred from the primary server.
 text_undo=الغاء التحميل
 text_ecannot=غير مسموح لك بتحرير ملفات السجل
 text_none=ومع ذلك ، فإن الملف فارغ حاليًا ، ربما لأن المنطقة لم يتم نقلها بعد من الخادم الرئيسي.
@@ -336,11 +336,11 @@ text_rawformat=هذه المنطقة بتنسيق ثنائي خام ، وبال�
 restart_err=فشل في تطبيق التغييرات
 restart_ecannot=غير مسموح لك بإعادة تشغيل BIND
 restart_epidfile=Could not find BIND PID in $1
-restart_errslave=This server was restarted OK, but the following errors occurred on slaves : $1
-restart_erunning2=BIND does not appear to be running on the slave server $1
+restart_errsecondary=This server was restarted OK, but the following errors occurred on secondarys : $1
+restart_erunning2=BIND does not appear to be running on the secondary server $1
 restart_endc=NDC command failed : $1
 restart_ecmd=Restart command failed : $1
-restart_eversion=Slave server $1 is not running Webmin version $2 or above.
+restart_eversion=secondary server $1 is not running Webmin version $2 or above.
 
 start_ecannot=غير مسموح لك ببدء BIND
 start_error=Failed to start BIND : $1
@@ -350,7 +350,7 @@ stop_ecannot=غير مسموح لك بإيقاف BIND
 fwd_title=تحرير المنطقة الأمامية
 fwd_ecannot=غير مسموح لك بتحرير هذه المنطقة
 fwd_opts=خيارات المنطقة
-fwd_masters=خوادم ماجستير
+fwd_primarys=خوادم ماجستير
 fwd_forward=جرب خوادم أخرى؟
 fwd_check=تحقق من الأسماء؟
 fwd_err=فشل في حفظ الخيارات
@@ -370,7 +370,7 @@ fcreate_type=نوع المنطقة
 fcreate_fwd=إلى الأمام (الأسماء إلى العناوين)
 fcreate_rev=عكس (عناوين إلى أسماء)
 fcreate_dom=اسم المجال / الشبكة
-fcreate_masters=خوادم ماجستير
+fcreate_primarys=خوادم ماجستير
 fcreate_err=فشل في إنشاء منطقة للأمام
 
 dcreate_title=إنشاء منطقة التفويض فقط
@@ -385,7 +385,7 @@ create_efile='$1' is not a valid filename
 create_efile2='$1' is not an allowable zone file
 create_efile3=Failed to create '$1' : $2
 create_efile4=File $1 already exists
-create_emaster='$1' is not a valid master server address
+create_eprimary='$1' is not a valid primary server address
 create_enone=يجب إدخال خادم رئيسي واحد على الأقل
 
 boot_err=التحميل فشل
@@ -593,8 +593,8 @@ acl_zsel=مناطق مختارة ..
 acl_znsel=كل ما عدا المحدد ..
 acl_inviews=المشاهدات يمكن لهذا المستخدم تحرير المجالات في
 acl_toplevel=خارج أي رأي
-acl_master=يمكن إنشاء مناطق رئيسية؟
-acl_slave=يمكن إنشاء مناطق الرقيق / كعب؟
+acl_primary=يمكن إنشاء مناطق رئيسية؟
+acl_secondary=يمكن إنشاء مناطق الرقيق / كعب؟
 acl_forward=يمكن أن تخلق مناطق إلى الأمام؟
 acl_defaults=يمكن تعديل الخيارات العالمية؟
 acl_reverse=يمكن تحديث عناوين عكسية في أي مجال؟
@@ -610,7 +610,7 @@ acl_params=يمكن تعديل معالم المنطقة؟
 acl_opts=يمكن تعديل خيارات المنطقة؟
 acl_delete=يمكن حذف المناطق؟
 acl_findfree=يمكن البحث عن أرقام IP المجانية؟
-acl_slaves=يمكن إدارة خوادم الرقيق العنقودية؟
+acl_secondarys=يمكن إدارة خوادم الرقيق العنقودية؟
 acl_views=يمكن إنشاء وتحرير وجهات النظر؟
 acl_edonly=تحرير فقط
 acl_remote=يمكن إنشاء مناطق الرقيق على خوادم بعيدة؟
@@ -627,8 +627,8 @@ acl_types=أنواع السجلات المسموح بها
 acl_types1=الكل
 acl_types0=المدرجة فقط
 acl_ztypes=يمكن أن تخلق أنواع المنطقة
-acl_ztypes_master=رئيس
-acl_ztypes_slave=الرقيق / كعب
+acl_ztypes_primary=رئيس
+acl_ztypes_secondary=الرقيق / كعب
 acl_ztypes_delegation=وفد
 acl_ztypes_forward=إلى الأمام
 
@@ -818,8 +818,8 @@ zonedef_ecannot=غير مسموح لك بتغيير الإعدادات الاف�
 zonedef_msg2=إعدادات المنطقة الافتراضية
 zonedef_transfer=السماح بالتحويلات من ..
 zonedef_query=السماح بالاستعلامات من ..
-zonedef_cmaster=تحقق الأسماء في المناطق الرئيسية؟
-zonedef_cslave=تحقق من الأسماء في مناطق العبيد؟
+zonedef_cprimary=تحقق الأسماء في المناطق الرئيسية؟
+zonedef_csecondary=تحقق من الأسماء في مناطق العبيد؟
 zonedef_cresponse=تحقق من الأسماء في الردود؟
 zonedef_notify=إخطار العبيد من التغييرات؟
 zonedef_email=عنوان البريد الإلكتروني الافتراضي
@@ -870,15 +870,15 @@ log_apply=التغييرات المطبقة
 log_apply2=Applied changes to $1
 log_start=بدأت خادم DNS
 log_stop=توقف خادم DNS
-log_master=Created master zone $1
-log_slave=Created slave zone $1
+log_primary=Created primary zone $1
+log_secondary=Created secondary zone $1
 log_stub=Created stub zone $1
 log_forward=Created forward zone $1
 log_delegation=Create delegation-only zone $1
 log_hint=إنشاء منطقة الجذر
 log_view=Created view $1
-log_delete_master=Deleted master zone $1
-log_delete_slave=Deleted slave zone $1
+log_delete_primary=Deleted primary zone $1
+log_delete_secondary=Deleted secondary zone $1
 log_delete_stub=Deleted stub zone $1
 log_delete_forward=Deleted forward zone $1
 log_delete_hint=منطقة الجذر المحذوفة
@@ -894,10 +894,10 @@ log_create_record_v=Created $1 record $2 value $4 in zone $3
 log_boot=إنشاء ملف التكوين الأساسي
 log_move=Moved zone $1
 log_review=Changed view options for $1
-log_add_host=Added slave server $1
-log_add_group=Added slave servers from group $1
-log_delete_host=Removed slave server $1
-log_delete_group=Removed $1 slave servers
+log_add_host=Added secondary server $1
+log_add_group=Added secondary servers from group $1
+log_delete_host=Removed secondary server $1
+log_delete_group=Removed $1 secondary servers
 log_mass=Created $1 zones from batch file
 log_rndc=إعداد RNDC
 log_delete_recs=Deleted $1 records
@@ -996,33 +996,33 @@ gen_ecannot=غير مسموح لك بتحرير مولدات السجلات
 
 refetch_err=أخفق إعادة تنزيل منطقة الجذر
 
-slaves_title=خوادم الرقيق العنقودية
-slaves_none=لم تتم إضافة أي خوادم إلى مجموعة DNS حتى الآن.
-slaves_host=اسم المضيف
-slaves_dosec=إنشاء المرتبات الثانية؟
-slaves_dosec1=ثانوي
-slaves_dosec0=ابتدائي
-slaves_view=إضافة للعرض
-slaves_noview=افضل مستوى
-slaves_desc=وصف
-slaves_os=نظام التشغيل
-slaves_add=إضافة خادم
-slaves_ok=إضافة الآن
-slaves_gadd=إضافة خوادم في المجموعة
-slaves_group=In group &lt;$1&gt;
-slaves_need=You must add servers with a login and password in the <a href='$1'>Webmin Servers Index</a> module before they can be managed here.
-slaves_return=خوادم الكتلة
-slaves_delete=ازل المحدد
-slaves_ecannot=غير مسموح لك بإدارة خوادم الرقيق العنقودية
-slaves_noview2=في المستوى العلوي
-slaves_sameview=عرض بنفس الاسم
-slaves_inview=عرض اسمه
-slaves_toview=عرض على العبيد لإضافة مناطق ل
-slaves_sync=إنشاء جميع المناطق الرئيسية الموجودة على الرقيق؟
-slaves_sec=إنشاء الثانوية على الرقيق عند إنشاء محليا؟
-slaves_name=اسم سجل NS
-slaves_same=نفس اسم المضيف
-slaves_header=خيارات خادم الرقيق الكتلة
+secondarys_title=خوادم الرقيق العنقودية
+secondarys_none=لم تتم إضافة أي خوادم إلى مجموعة DNS حتى الآن.
+secondarys_host=اسم المضيف
+secondarys_dosec=إنشاء المرتبات الثانية؟
+secondarys_dosec1=ثانوي
+secondarys_dosec0=ابتدائي
+secondarys_view=إضافة للعرض
+secondarys_noview=افضل مستوى
+secondarys_desc=وصف
+secondarys_os=نظام التشغيل
+secondarys_add=إضافة خادم
+secondarys_ok=إضافة الآن
+secondarys_gadd=إضافة خوادم في المجموعة
+secondarys_group=In group &lt;$1&gt;
+secondarys_need=You must add servers with a login and password in the <a href='$1'>Webmin Servers Index</a> module before they can be managed here.
+secondarys_return=خوادم الكتلة
+secondarys_delete=ازل المحدد
+secondarys_ecannot=غير مسموح لك بإدارة خوادم الرقيق العنقودية
+secondarys_noview2=في المستوى العلوي
+secondarys_sameview=عرض بنفس الاسم
+secondarys_inview=عرض اسمه
+secondarys_toview=عرض على العبيد لإضافة مناطق ل
+secondarys_sync=إنشاء جميع المناطق الرئيسية الموجودة على الرقيق؟
+secondarys_sec=إنشاء الثانوية على الرقيق عند إنشاء محليا؟
+secondarys_name=اسم سجل NS
+secondarys_same=نفس اسم المضيف
+secondarys_header=خيارات خادم الرقيق الكتلة
 
 add_title=إضافة خوادم
 add_msg=Adding $1 ..
@@ -1036,18 +1036,18 @@ add_eversion2=Server $1 is not running Webmin version $2 or above, which is need
 add_eipaddr=Server $1 has an IP address instead of a hostname
 add_ok=Added $1, with $2 existing zones.
 add_eview=أسماء عرض مفقودة
-add_createerr=Setup $1 with $2 new slave zones, but encountered $3 errors :
-add_createok=Setup $1 with $2 new slave zones.
+add_createerr=Setup $1 with $2 new secondary zones, but encountered $3 errors :
+add_createok=Setup $1 with $2 new secondary zones.
 add_ename=اسم سجل NS مفقود أو غير صالح
 add_egname=لا يمكن تحديد اسم سجل NS عند إضافة مجموعة
-add_emyip=Could not work out this system's IP address. You should set the <b>Default master server IP for remote slave zones</b> on the Module Config page.
+add_emyip=Could not work out this system's IP address. You should set the <b>Default primary server IP for remote secondary zones</b> on the Module Config page.
 
 mass_title=إنشاء مناطق من ملف دفعي
-mass_desc=تتيح لك هذه الصفحة إنشاء مناطق متعددة في وقت واحد من ملف نصي محمّل أو من جانب الخادم. يجب أن يكون لكل سطر في الملف التنسيق التالي: <p style=";text-align:right;direction:rtl"></p> <tt><i>domainname</i>:<i>type</i>:<i>filename</i>:<i>master IPs</i></tt> <p style=";text-align:right;direction:rtl"></p> يجب أن يكون <i>النوع من النوع</i> <tt>master</tt> ، أو <tt>slave</tt> ، أو <tt>stub</tt> أو <tt>forward</tt>. <i>اسم الملف</i> اختياري ، وسيتم حسابه تلقائيًا في حالة فقده. يجب إعطاء <i>عناوين IP الرئيسية</i> فقط للمناطق التابعة.
+mass_desc=تتيح لك هذه الصفحة إنشاء مناطق متعددة في وقت واحد من ملف نصي محمّل أو من جانب الخادم. يجب أن يكون لكل سطر في الملف التنسيق التالي: <p style=";text-align:right;direction:rtl"></p> <tt><i>domainname</i>:<i>type</i>:<i>filename</i>:<i>primary IPs</i></tt> <p style=";text-align:right;direction:rtl"></p> يجب أن يكون <i>النوع من النوع</i> <tt>primary</tt> ، أو <tt>secondary</tt> ، أو <tt>stub</tt> أو <tt>forward</tt>. <i>اسم الملف</i> اختياري ، وسيتم حسابه تلقائيًا في حالة فقده. يجب إعطاء <i>عناوين IP الرئيسية</i> فقط للمناطق التابعة.
 mass_local=ملف دفعي محلي
 mass_upload=تم تحميل الملف الدفعي
 mass_text=نص ملف دفعي
-mass_onslave=إنشاء مناطق رئيسية على خوادم الرقيق؟
+mass_onsecondary=إنشاء مناطق رئيسية على خوادم الرقيق؟
 mass_ok=اصنع الان
 mass_header=خيارات إنشاء منطقة الدُفعات
 mass_err=فشل في إنشاء مناطق من ملف دفعي
@@ -1061,8 +1061,8 @@ mass_tmpl=إضافة سجلات القالب؟
 mass_etaken=المنطقة موجودة بالفعل
 mass_etmpl=عنوان IP مفقود للقالب
 mass_eip=عنوان إب غير صالح
-mass_addedmaster=Added master zone $1 OK
-mass_addedslave=Added slave zone $1 OK
+mass_addedprimary=Added primary zone $1 OK
+mass_addedsecondary=Added secondary zone $1 OK
 mass_addedstub=Added stub zone $1 OK
 mass_addedforward=Added forward zone $1 OK
 mass_dolocal=Creating zones from file $1 ..
@@ -1070,8 +1070,8 @@ mass_doupload=إنشاء مناطق من الملف الذي تم تحميله .
 mass_dotext=إنشاء مناطق من النص الذي تم إدخاله ..
 mass_done=.. فعله.
 mass_emips=عناوين IP الرئيسية المفقودة
-mass_addedslaves=Added $1 to slave servers OK.
-mass_eonslave=Errors occurred created on slave servers : $1
+mass_addedsecondarys=Added $1 to secondary servers OK.
+mass_eonsecondary=Errors occurred created on secondary servers : $1
 mass_eviewcannot=غير مسموح لك بإضافة مناطق إلى طريقة العرض هذه
 
 massdelete_title=حذف المناطق
@@ -1079,7 +1079,7 @@ massdelete_rusure=Are you sure you want to delete the $1 selected zones? ($2)
 massdelete_ok=احذف الان
 massdelete_zone=Deleting zone $1 ..
 massdelete_done=.. فعله.
-massdelete_slaves=Deleting zone $1 from slave servers ..
+massdelete_secondarys=Deleting zone $1 from secondary servers ..
 massdelete_failed=.. فشل بعض العبيد :
 massdelete_vwarn=ترتبط بعض المناطق بمجال Virtualmin $1 ، لذا لا ينبغي حذفها هنا!
 massdelete_vwarn2=ترتبط بعض المناطق بمجال Virtualmin $1 و$2 ، لذا لا يجب حذفها هنا!
@@ -1124,7 +1124,7 @@ umass_ok=تغيير السجلات
 umass_eold=لم تدخل القيمة الحالية
 umass_enew=لم يتم إدخال قيمة جديدة
 umass_doing=Updating records in zone $1 ..
-umass_notmaster=.. ليس منطقة رئيسية.
+umass_notprimary=.. ليس منطقة رئيسية.
 umass_done=.. updated $1 matching records out of $2.
 umass_none=.. no matching records out of $1 to update found.
 umass_egone=المنطقة غير موجودة
@@ -1335,7 +1335,7 @@ trusted_warning=Warning! Your BIND DNSSEC client configuration contains out of d
 trusted_fix=إصلاح تكوين DNSSEC
 
 xfer_title=نقل منطقة الاختبار
-xfer_doing=Testing transfer of slave zone from $1 ..
+xfer_doing=Testing transfer of secondary zone from $1 ..
 xfer_failed=.. from $1 : Failed : $2
 xfer_done=.. from $1 : Completed OK
 xfer_count=Test transfer successfully fetched $1 records from at least one nameserver. Actual transfers by BIND should also succeed.

@@ -16,11 +16,11 @@ my $z = &zone_to_config($zone);
 my $zconf = $z->{'members'};
 my $dom = $zone->{'name'};
 &can_edit_zone($zone) ||
-	&error($text{'master_ecannot'});
+	&error($text{'primary_ecannot'});
 my $indent = $zone->{'view'} ? 2 : 1;
 
 &lock_file(&make_chroot($z->{'file'}));
-$access{'ro'} && &error($text{'master_ero'});
+$access{'ro'} && &error($text{'primary_ero'});
 
 &save_forwarders("forwarders", $z, $indent);
 &save_choice("check-names", $z, $indent);

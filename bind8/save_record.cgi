@@ -19,7 +19,7 @@ my $reverse = ($in{'origin'} =~ /\.in-addr\.arpa/i ||
 &can_edit_zone($zone) || &error($text{'recs_ecannot'});
 &can_edit_type($in{'type'}) ||
 	&error($text{'recs_ecannottype'});
-$access{'ro'} && &error($text{'master_ero'});
+$access{'ro'} && &error($text{'primary_ero'});
 &lock_file(&make_chroot(&absolute_path($zone->{'file'})));
 
 # Read the existing records
@@ -162,7 +162,7 @@ else {
 			# Is this address already in use? Search all domains
 			# to find out..
 			foreach my $z (@zl) {
-				next if ($z->{'type'} ne "master" &&
+				next if ($z->{'type'} ne "primary" &&
 					 $z->{'type'} ne "primary");
 				next if ($z->{'name'} =~ /in-addr\.arpa/i);
 				my $file = $z->{'file'};
@@ -185,7 +185,7 @@ else {
 			# Is this address already in use? Search all domains
 			# to find out..
 			foreach my $z (@zl) {
-				next if ($z->{'type'} ne "master" &&
+				next if ($z->{'type'} ne "primary" &&
 					 $z->{'type'} ne "primary");
 				next if ($z->{'name'} =~ /\.$ipv6revzone/i);
 				my $file = $z->{'file'};
@@ -536,7 +536,7 @@ if ($in{'new'}) {
 			&sign_dnssec_zone_if_key($revconf, \@rrecs);
 			}
 		elsif (!$revrec) {
-			# Add a reverse record if we are the master for the
+			# Add a reverse record if we are the primary for the
 			# reverse domain, and if there is not already a
 			# reverse record for the address.
 			&lock_file(&make_chroot($revfile));

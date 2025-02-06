@@ -9,12 +9,12 @@ index_eexpired=警告：次のゾーンはDNSSEC署名の有効期限が切れ�
 index_eexpired_conf=$1ページで自動署名を再度有効にする必要があります。
 index_eexpired_mod=$1モジュールを使用して、これらのドメインのDNSSECを無効にするか、署名が失敗する理由を確認します。
 
-master_inview=ビュー $2の $1
-master_egone=ゾーン$1はどのビューにも存在しません
-master_egone2=ゾーン$1は存在しません！
-master_egone3=ビュー$2のゾーン$1は存在しません！
-master_vmin=このゾーンは Virtualmin によって管理されます。レコードは、他の仮想サーバー設定との一貫性を確保するために、Virtualmin UI を使用して編集する必要があります。
-master_vminalias=このゾーンは Virtualmin ドメインのエイリアスであり、ターゲットとの同期が保たれます。変更が上書きされるため、ここでレコードを編集しないでください。
+primary_inview=ビュー $2の $1
+primary_egone=ゾーン$1はどのビューにも存在しません
+primary_egone2=ゾーン$1は存在しません！
+primary_egone3=ビュー$2のゾーン$1は存在しません！
+primary_vmin=このゾーンは Virtualmin によって管理されます。レコードは、他の仮想サーバー設定との一貫性を確保するために、Virtualmin UI を使用して編集する必要があります。
+primary_vminalias=このゾーンは Virtualmin ドメインのエイリアスであり、ターゲットとの同期が保たれます。変更が上書きされるため、ここでレコードを編集しないでください。
 
 delete_vwarn=このゾーンはVirtualminドメイン $1に関連付けられているため、ここで削除しないでください！
 delete_vwarn2=このゾーンはVirtualminドメイン $1および $2に関連付けられているため、ここで削除しないでください！
@@ -23,10 +23,10 @@ mcreate_dnssec_tools_enable=DNSSEC-Toolsを使用してDNSSECを有効にする
 mcreate_ednssecsize=キーサイズの計算に失敗しました：$1
 mcreate_ednssec=レコードの作成は成功しましたが、DNSSECが失敗しました：$1
 
-slave_format=ゾーンファイル形式
-slave_raw=生のバイナリ
-slave_text=平文
-slave_xfer=テストゾーン転送
+secondary_format=ゾーンファイル形式
+secondary_raw=生のバイナリ
+secondary_text=平文
+secondary_xfer=テストゾーン転送
 
 recs_nosearch=検索に一致するレコードはありませんでした。
 recs_needsearch=検索を入力して、一致するレコードを見つけます。

@@ -7,7 +7,7 @@ no warnings 'uninitialized';
 our (%access, %text);
 
 require './bind8-lib.pl';
-$access{'slaves'} || &error($text{'slaves_ecannot'});
+$access{'ss'} || &error($text{'slaves_ecannot'});
 &foreign_require("servers", "servers-lib.pl");
 &ReadParse();
 &ui_print_header(undef, $text{'slaves_title'}, "");

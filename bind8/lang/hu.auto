@@ -6,12 +6,12 @@ index_eexpired=Figyelem: A következő zónák már nem rendelkeznek DNSSEC alá
 index_eexpired_conf=Az automatikus aláírást újra engedélyezni kell a $1 oldalon.
 index_eexpired_mod=Használja a $1 modult vagy a DNSSEC letiltásához ezekben a tartományokban, vagy ellenőrizze, miért nem sikerül az aláírás.
 
-master_inview=$1 a $2 nézetben
-master_egone=A $1 zóna egyetlen nézetben sem létezik
-master_egone2=A $1 zóna nem létezik!
-master_egone3=A $1 zóna a $2 nézetben nem létezik!
-master_vmin=Ezt a zónát a Virtualmin kezeli. A rekordokat a Virtualmin UI használatával kell szerkeszteni, hogy konzisztensek legyenek a többi virtuális szerver beállításával.
-master_vminalias=Ez a zóna egy Virtualmin tartomány álneve, amely szinkronban van a céljával. A rekordokat soha nem szabad itt szerkeszteni, mert az esetleges változtatások felülíródnak!
+primary_inview=$1 a $2 nézetben
+primary_egone=A $1 zóna egyetlen nézetben sem létezik
+primary_egone2=A $1 zóna nem létezik!
+primary_egone3=A $1 zóna a $2 nézetben nem létezik!
+primary_vmin=Ezt a zónát a Virtualmin kezeli. A rekordokat a Virtualmin UI használatával kell szerkeszteni, hogy konzisztensek legyenek a többi virtuális szerver beállításával.
+primary_vminalias=Ez a zóna egy Virtualmin tartomány álneve, amely szinkronban van a céljával. A rekordokat soha nem szabad itt szerkeszteni, mert az esetleges változtatások felülíródnak!
 
 delete_vwarn=Ez a zóna a $1 Virtualmin domainhez van társítva, ezért itt nem szabad törölni!
 
@@ -19,9 +19,9 @@ delete_vwarn2=Ez a zóna a $1 és a (z) $2 Virtualmin domainhez van társítva, 
 
 mcreate_dnssec_tools_enable=Engedélyezze a DNSSEC-et a DNSSEC-Tools használatával
 
-slave_format=Zóna fájlformátum
-slave_raw=Nyers bináris
-slave_text=Egyszerű szöveg
+secondary_format=Zóna fájlformátum
+secondary_raw=Nyers bináris
+secondary_text=Egyszerű szöveg
 
 recs_nosearch=Nincs keresési feltétel.
 recs_needsearch=Írja be a keresést a megfelelő rekordok kereséséhez.

@@ -41,12 +41,12 @@ foreach my $d (split(/\0/, $in{'d'})) {
 		$zconf = $conf->[$zone->{'index'}];
 		}
 	&can_edit_zone($zone) ||
-		&error($text{'master_edelete'});
+		&error($text{'primary_edelete'});
 	push(@zones, [ $zconf, $view ]);
 	push(@znames, $zconf->{'value'});
 	}
-$access{'ro'} && &error($text{'master_ero'});
-$access{'delete'} || &error($text{'master_edeletecannot'});
+$access{'ro'} && &error($text{'primary_ero'});
+$access{'delete'} || &error($text{'primary_edeletecannot'});
 
 if (!$in{'confirm'}) {
 	# Ask the user if he is sure
@@ -64,15 +64,15 @@ if (!$in{'confirm'}) {
 				    : &text('massdelete_vwarn2', $f, @doms-1);
 		}
 
-	my @servers = &list_slave_servers();
+	my @servers = &list_secondary_servers();
 	print &ui_confirmation_form("mass_delete.cgi",
 		&text('massdelete_rusure', scalar(@zones),
 		      join(", ", @znames)),
 		[ map { [ "d", $_ ] } split(/\0/, $in{'d'}) ],
 		[ [ 'confirm', $text{'massdelete_ok'} ] ],
 		@servers && $access{'remote'} ?
-			$text{'delete_onslave'}." ".
-			&ui_yesno_radio("onslave", 1) : "",
+			$text{'delete_onsecondary'}." ".
+			&ui_yesno_radio("onsecondary", 1) : "",
 		$vwarn,
 		);
 
@@ -103,16 +103,16 @@ else {
 				[ $zconf ], [ ]);
 		print $text{'massdelete_done'},"<p>\n";
 
-		# Also delete from slave servers
-		if ($in{'onslave'} && $access{'remote'}) {
+		# Also delete from secondary servers
+		if ($in{'onsecondary'} && $access{'remote'}) {
 			my $viewname = $view ? $view->{'values'}->[0] : undef;
-			print &text('massdelete_slaves',
+			print &text('massdelete_secondarys',
 				    $zconf->{'value'}),"<br>\n";
-			my @slaveerrs = &delete_on_slaves(
+			my @secondaryerrs = &delete_on_secondarys(
 				$zconf->{'value'}, undef, $viewname);
-			if (@slaveerrs) {
+			if (@secondaryerrs) {
 				print $text{'massdelete_failed'},"<br>\n";
-				foreach my $s (@slaveerrs) {
+				foreach my $s (@secondaryerrs) {
 					print "$s->[0]->{'host'} : $s->[1]<br>\n";
 					}
 				print "<p>\n";

@@ -9,7 +9,7 @@ our (%access, %text, %config);
 
 require './bind8-lib.pl';
 $access{'forward'} || &error($text{'fcreate_ecannot'});
-$access{'ro'} && &error($text{'master_ero'});
+$access{'ro'} && &error($text{'primary_ero'});
 &ui_print_header(undef, $text{'fcreate_title'}, "",
 		 undef, undef, undef, undef, &restart_links());
 
@@ -38,9 +38,9 @@ if (@views) {
 			grep { &can_edit_view($_) } @views ]), 3);
 	}
 
-# Master servers
-print &ui_table_row($text{'fcreate_masters'},
-	&ui_textarea("masters", undef, 4, 30));
+# Primary servers
+print &ui_table_row($text{'fcreate_primarys'},
+	&ui_textarea("primarys", undef, 4, 30));
 
 print &ui_table_end();
 print &ui_form_end([ [ undef, $text{'create'} ] ]);

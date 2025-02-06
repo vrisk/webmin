@@ -22,13 +22,13 @@ my $typedesc = $text{"recs_$in{'type'}"} || $in{'type'};
 
 # Show form for adding a record
 my $type = $zone->{'type'};
-$type = 'master' if ($type eq 'primary');
-$type = 'slave' if ($type eq 'secondary');
+$type = 'primary' if ($type eq 'primary');
+$type = 'secondary' if ($type eq 'secondary');
 my $file = $zone->{'file'};
 my $form = 0;
 my $shown_create_form;
 my $newname = $in{'newname'} || ($in{'type'} eq 'DMARC' ? '_dmarc' : undef);
-if (!$access{'ro'} && $type eq 'master' && $in{'type'} ne 'ALL') {
+if (!$access{'ro'} && $type eq 'primary' && $in{'type'} ne 'ALL') {
 	&record_input($in{'zone'}, $in{'view'}, $in{'type'}, $file, $dom,
 		      undef, undef, $newname, $in{'newvalue'});
 	$form++;
@@ -99,7 +99,7 @@ if (@recs) {
 			}
 		}
 	my @links = ( );
-	if (!$access{'ro'} && $type eq 'master') {
+	if (!$access{'ro'} && $type eq 'primary') {
 		print &ui_form_start("delete_recs.cgi", "post");
 		print &ui_hidden("zone", $in{'zone'}),"\n";
 		print &ui_hidden("view", $in{'view'}),"\n";
@@ -111,7 +111,7 @@ if (@recs) {
 	print &ui_links_row(\@links);
 	print &recs_table(@recs);
 	print &ui_links_row(\@links);
-	if (!$access{'ro'} && $type eq 'master') {
+	if (!$access{'ro'} && $type eq 'primary') {
 		print &ui_submit($text{'recs_delete'}),"\n";
 		if ($in{'type'} eq 'A' || $in{'type'} eq 'AAAA') {
 			print &ui_checkbox("rev", 1, $text{'recs_drev'},
@@ -143,7 +143,7 @@ my $rv;
 
 # Generate header, with correct columns for record type
 my (@hcols, @tds);
-if (!$access{'ro'} && $type eq 'master') {
+if (!$access{'ro'} && $type eq 'primary') {
 	push(@hcols, "");
 	push(@tds, "width=5");
 	}
@@ -175,7 +175,7 @@ for(my $i=0; $i<@_; $i++) {
 	my @cols;
 	$name = &html_escape($name);
 	my $id = &record_id($r);
-	if (!$access{'ro'} && $type eq 'master') {
+	if (!$access{'ro'} && $type eq 'primary') {
 		push(@cols, &ui_link("edit_record.cgi?zone=$in{'zone'}&id=".&urlize($id)."&num=$r->{'num'}&type=$in{'type'}&sort=$in{'sort'}&view=$in{'view'}", $name) );
 		}
 	else {
@@ -272,7 +272,7 @@ for(my $i=0; $i<@_; $i++) {
 	if ($config{'allow_comments'} && $in{'type'} ne "WKS") {
 		push(@cols, &html_escape($r->{'comment'}));
 		}
-	if (!$access{'ro'} && $type eq 'master') {
+	if (!$access{'ro'} && $type eq 'primary') {
 		$rv .= &ui_checked_columns_row(\@cols, \@tds,
 					      "d", $r->{'num'}."/".$id);
 		}

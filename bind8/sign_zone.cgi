@@ -1,5 +1,5 @@
 #!/usr/local/bin/perl
-# Sign a master zone
+# Sign a primary zone
 use strict;
 use warnings;
 no warnings 'redefine';
@@ -12,7 +12,7 @@ require './bind8-lib.pl';
 my $zone = &get_zone_name_or_error($in{'zone'}, $in{'view'});
 my $dom = $zone->{'name'};
 &can_edit_zone($zone) ||
-	&error($text{'master_ecannot'});
+	&error($text{'primary_ecannot'});
 
 # Do the signing
 &lock_file(&make_chroot(&absolute_path($zone->{'file'})));
@@ -22,7 +22,7 @@ my $err = &sign_dnssec_zone($zone, 1);
 $err = &restart_zone($zone->{'name'}, $zone->{'view'});
 &error($err) if ($err);
 
-# Return to master page
+# Return to primary page
 &webmin_log("sign", undef, $dom);
 &redirect("edit_master.cgi?zone=$in{'zone'}&view=$in{'view'}");
 

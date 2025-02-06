@@ -9,13 +9,13 @@ our (%access, %text, %in, %config);
 
 require './bind8-lib.pl';
 &ReadParse();
-&error_setup($text{'master_err2'});
+&error_setup($text{'primary_err2'});
 my $zone = &get_zone_name_or_error($in{'zone'}, $in{'view'});
 my $dom = $zone->{'name'};
 &can_edit_zone($zone) ||
-	&error($text{'master_ecannot'});
-$access{'ro'} && &error($text{'master_ero'});
-$access{'params'} || &error($text{'master_esoacannot'});
+	&error($text{'primary_ecannot'});
+$access{'ro'} && &error($text{'primary_ero'});
+$access{'params'} || &error($text{'primary_esoacannot'});
 
 # Get the SOA and file
 my @recs = &read_zone_file($zone->{'file'}, $dom);
@@ -23,27 +23,27 @@ my $soa;
 foreach my $r (@recs) {
 	$soa = $r if ($r->{'type'} eq "SOA");
 	}
-$soa || &error($text{'master_esoagone'});
+$soa || &error($text{'primary_esoagone'});
 my $file = $soa->{'file'};
 
 # check inputs
-&valdnsname($in{'master'}, 0, $in{'origin'}) ||
-	&error(&text('master_emaster', $in{'master'}));
+&valdnsname($in{'primary'}, 0, $in{'origin'}) ||
+	&error(&text('primary_eprimary', $in{'primary'}));
 &valemail($in{'email'}) ||
-	&error(&text('master_eemail', $in{'email'}));
+	&error(&text('primary_eemail', $in{'email'}));
 $in{'refresh'} =~ /^\d+$/ ||
-	&error(&text('master_erefresh', $in{'refresh'}));
+	&error(&text('primary_erefresh', $in{'refresh'}));
 $in{'retry'} =~ /^\d+$/ ||
-	&error(&text('master_eretry', $in{'retry'}));
+	&error(&text('primary_eretry', $in{'retry'}));
 $in{'expiry'} =~ /^\d+$/ ||
-	&error(&text('master_eexpiry', $in{'expiry'}));
+	&error(&text('primary_eexpiry', $in{'expiry'}));
 $in{'minimum'} =~ /^\d+$/ ||
-	&error(&text('master_eminimum', $in{'minimum'}));
+	&error(&text('primary_eminimum', $in{'minimum'}));
 if ($in{'email'} =~ /\@/) {
 	$in{'email'} = &email_to_dotted($in{'email'});
 	}
 $in{'defttl_def'} || $in{'defttl'} =~ /^\d+$/ ||
-	&error(&text('master_edefttl', $in{'defttl'}));
+	&error(&text('primary_edefttl', $in{'defttl'}));
 
 &lock_file(&make_chroot($file));
 @recs = &read_zone_file($file, $in{'origin'});
@@ -55,10 +55,10 @@ if ($config{'updserial_on'}) {
 	$serial = &compute_serial($old->{'values'}->[2]);
 	}
 else {
-	$in{'serial'} =~ /^\d+$/ || &error($text{'master_eserial'});
+	$in{'serial'} =~ /^\d+$/ || &error($text{'primary_eserial'});
 	$serial = $in{'serial'};
 	}
-my $vals = "$in{'master'} $in{'email'} (\n".
+my $vals = "$in{'primary'} $in{'email'} (\n".
 	"\t\t\t$serial\n".
 	"\t\t\t$in{'refresh'}$in{'refunit'}\n".
 	"\t\t\t$in{'retry'}$in{'retunit'}\n".
@@ -80,5 +80,5 @@ elsif ($defttl && $in{'defttl_def'}) {
 
 &unlock_file(&make_chroot($file));
 &webmin_log("soa", undef, $in{'origin'}, \%in);
-&redirect("edit_master.cgi?zone=$in{'zone'}&view=$in{'view'}");
+&redirect("edit_primary.cgi?zone=$in{'zone'}&view=$in{'view'}");
 

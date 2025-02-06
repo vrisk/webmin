@@ -1,5 +1,5 @@
 #!/usr/local/bin/perl
-# Force a zone transfer for a slave domain
+# Force a zone transfer for a secondary domain
 
 use strict;
 use warnings;
@@ -13,7 +13,7 @@ my $zone = &get_zone_name_or_error($in{'zone'}, $in{'view'});
 my $z = &zone_to_config($zone);
 my $zconf = $z->{'members'};
 &can_edit_zone($zone) ||
-	&error($text{'master_ecannot'});
+	&error($text{'primary_ecannot'});
 
 my $desc = &ip6int_to_net(&arpa_to_ip($zone->{'name'}));
 &ui_print_header($desc, $text{'xfer_title'}, "",
@@ -23,15 +23,15 @@ my $desc = &ip6int_to_net(&arpa_to_ip($zone->{'name'}));
 my $options = &find("options", $zconf);
 my $src = &find("transfer-source", $options->{'members'});
 
-# Get master IPs
-my $masters = &find("masters", $zconf);
+# Get primary IPs
+my $primarys = &find("primarys", $zconf);
 my @ips;
-foreach my $av (@{$masters->{'members'}}) {
+foreach my $av (@{$primarys->{'members'}}) {
 	push(@ips, join(" ", $av->{'name'}, @{$av->{'values'}}));
 	}
 print &text('xfer_doing', join(" ", @ips)),"<br>\n";
 my $temp = &transname();
-my $rv = &transfer_slave_records($zone->{'name'}, \@ips, $temp,
+my $rv = &transfer_secondary_records($zone->{'name'}, \@ips, $temp,
 			      $src ? $src->{'values'}->[0] : undef,
 			      $src && @{$src->{'values'}} > 2 ?
 				$src->{'values'}->[2] : undef);
@@ -59,5 +59,5 @@ if (-r $temp) {
 	}
 &unlink_file($temp);
 
-&ui_print_footer("edit_slave.cgi?zone=$in{'zone'}&view=$in{'view'}",
-		 $text{'master_return'});
+&ui_print_footer("edit_secondary.cgi?zone=$in{'zone'}&view=$in{'view'}",
+		 $text{'primary_return'});

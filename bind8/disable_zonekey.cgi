@@ -12,7 +12,7 @@ require './bind8-lib.pl';
 my $zone = &get_zone_name_or_error($in{'zone'}, $in{'view'});
 my $dom = $zone->{'name'};
 &can_edit_zone($zone) ||
-	&error($text{'master_ecannot'});
+	&error($text{'primary_ecannot'});
 my $desc = &ip6int_to_net(&arpa_to_ip($dom));
 
 &lock_file(&make_chroot(&absolute_path($zone->{'file'})));
@@ -31,5 +31,5 @@ foreach my $k (@keyfiles) {
 &unlock_file(&make_chroot(&absolute_path($zone->{'file'})));
 
 &webmin_log("zonekeyoff", undef, $dom);
-&redirect("edit_master.cgi?zone=$in{'zone'}&view=$in{'view'}");
+&redirect("edit_primary.cgi?zone=$in{'zone'}&view=$in{'view'}");
 

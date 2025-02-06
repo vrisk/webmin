@@ -15,7 +15,7 @@ my $z = &zone_to_config($zone);
 my $zconf = $z->{'members'};
 my $dom = $zone->{'name'};
 &can_edit_zone($zone) ||
-	&error($text{'master_ecannot'});
+	&error($text{'primary_ecannot'});
 
 # Get the object for the new view
 my $pconf = &get_config_parent();
@@ -25,8 +25,8 @@ my $nconf = $conf->[$in{'newview'}];
 # If the zone is in a view currently, get it too
 my $oldpconf = $zone->{'viewindex'} ? $conf->[$zone->{'viewindex'}] : $pconf;
 
-$in{'view'} eq $in{'newview'} && &error($text{'master_emove'});
-&can_edit_view($nconf) || &error($text{'master_eviewcannot'});
+$in{'view'} eq $in{'newview'} && &error($text{'primary_emove'});
+&can_edit_view($nconf) || &error($text{'primary_eviewcannot'});
 
 # Delete from the old view (or top level)
 &lock_file(&make_chroot($z->{'file'}));

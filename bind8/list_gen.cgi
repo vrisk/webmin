@@ -14,7 +14,7 @@ $access{'gen'} || &error($text{'gen_ecannot'});
 
 my $zone = &get_zone_name_or_error($in{'zone'}, $in{'view'});
 my $dom = $zone->{'name'};
-&can_edit_zone($zone) || &error($text{'master_ecannot'});
+&can_edit_zone($zone) || &error($text{'primary_ecannot'});
 
 my $desc = &text('recs_header', &zone_subhead($zone));
 &ui_print_header($desc, $text{'gen_title'}, "",
@@ -60,6 +60,6 @@ if (@gens) {
 	}
 print &ui_form_end(\@buts);
 
-&ui_print_footer("edit_master.cgi?zone=$in{'zone'}&view=$in{'view'}",
-	$text{'master_return'});
+&ui_print_footer("edit_primary.cgi?zone=$in{'zone'}&view=$in{'view'}",
+	$text{'primary_return'});
 

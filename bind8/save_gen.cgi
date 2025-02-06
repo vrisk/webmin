@@ -16,7 +16,7 @@ $access{'gen'} || &error($text{'gen_ecannot'});
 
 my $zone = &get_zone_name_or_error($in{'zone'}, $in{'view'});
 my $dom = $zone->{'name'};
-&can_edit_zone($zone) || &error($text{'master_ecannot'});
+&can_edit_zone($zone) || &error($text{'primary_ecannot'});
 
 my $file = $zone->{'file'};
 if (!$in{'show'}) {
@@ -70,8 +70,8 @@ if ($in{'show'}) {
 		}
 	print &ui_columns_end();
 
-	&ui_print_footer("edit_master.cgi?zone=$in{'zone'}&view=$in{'view'}",
-		$text{'master_return'});
+	&ui_print_footer("edit_primary.cgi?zone=$in{'zone'}&view=$in{'view'}",
+		$text{'primary_return'});
 	exit;
 	}
 
@@ -122,7 +122,7 @@ for(my $i=0; defined($in{"type_$i"}); $i++) {
 &sign_dnssec_zone_if_key($zone, \@recs);
 &after_editing($zone);
 &unlock_file(&make_chroot(&absolute_path($zone->{'file'})));
-&redirect("edit_master.cgi?zone=$in{'zone'}&view=$in{'view'}");
+&redirect("edit_primary.cgi?zone=$in{'zone'}&view=$in{'view'}");
 
 sub expand_mods
 {

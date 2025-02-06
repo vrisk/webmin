@@ -14,7 +14,7 @@ if ($cgi =~ /^conf_/) {
 	# All config pages can be linked to
 	return '';
 	}
-elsif ($cgi =~ /^edit_(master|slave|stub|forward|delegation|hint).cgi$/) {
+elsif ($cgi =~ /^edit_(primary|secondary|stub|forward|delegation|hint).cgi$/) {
 	# Find a zone of this type
 	my @allzones = grep { &can_edit_zone($_) } &list_zone_names();
 	my ($z) = grep { $_->{'type'} eq $1 } @allzones;
@@ -32,8 +32,8 @@ elsif ($cgi eq 'edit_text.cgi' || $cgi eq 'edit_soa.cgi' ||
        $cgi eq 'list_gen.cgi' || $cgi eq 'whois.cg' ||
        $cgi eq 'edit_zonekey.cgi' || $cgi eq 'edit_recs.cgi' ||
        $cgi eq 'edit_record.cgi') {
-	# Find a master zone
-	my ($z) = grep { ($_->{'type'} eq 'master' ||
+	# Find a primary zone
+	my ($z) = grep { ($_->{'type'} eq 'primary' ||
 			  $_->{'type'} eq 'primary') &&
 			 &can_edit_zone($_) } &list_zone_names();
 	return 'none' if (!$z);
@@ -56,8 +56,8 @@ elsif ($cgi eq 'edit_text.cgi' || $cgi eq 'edit_soa.cgi' ||
 	return $rv;
 	}
 elsif ($cgi eq 'view_text.cgi' || $cgi eq 'edit_soptions.cgi') {
-	# Find a slave zone
-	my ($z) = grep { $_->{'type'} eq 'slave' &&
+	# Find a secondary zone
+	my ($z) = grep { $_->{'type'} eq 'secondary' &&
 			 &can_edit_zone($_) } &list_zone_names();
 	return $z ? 'zone='.$z->{'zone'}.
 		    ($z->{'view'} ? '&view='.$z->{'viewindex'} : '') : 'none';

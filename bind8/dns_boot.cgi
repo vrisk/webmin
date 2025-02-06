@@ -30,11 +30,11 @@ if ($chroot && !-d $chroot) {
 if (!-d &make_chroot($conf_directory)) {
 	mkdir(&make_chroot($conf_directory), 0755);
 	}
-if ($config{'master_dir'} && !-d &make_chroot($config{'master_dir'})) {
-	mkdir(&make_chroot($config{'master_dir'}), 0755);
+if ($config{'primary_dir'} && !-d &make_chroot($config{'primary_dir'})) {
+	mkdir(&make_chroot($config{'primary_dir'}), 0755);
 	}
-if ($config{'slave_dir'} && !-d &make_chroot($config{'slave_dir'})) {
-	mkdir(&make_chroot($config{'slave_dir'}), 0777);
+if ($config{'secondary_dir'} && !-d &make_chroot($config{'secondary_dir'})) {
+	mkdir(&make_chroot($config{'secondary_dir'}), 0777);
 	}
 if ($pid_file =~ /^(.*)\//) {
 	my $pid_dir = $1;

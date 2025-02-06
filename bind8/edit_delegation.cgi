@@ -16,7 +16,7 @@ my $z = &zone_to_config($zone);
 my $zconf = $z->{'members'};
 my $dom = $zone->{'name'};
 &can_edit_zone($zone) ||
-	&error($text{'master_ecannot'});
+	&error($text{'primary_ecannot'});
 
 &ui_print_header(&zone_subhead($zone), $text{'delegation_title'}, "",
 		 undef, undef, undef, undef, &restart_links());
@@ -34,7 +34,7 @@ if (!$access{'ro'}) {
 	# Delete zone
 	if ($access{'delete'}) {
 		print &ui_buttons_row("delete_zone.cgi",
-			$text{'master_del'}, $text{'delegation_delmsg'},
+			$text{'primary_del'}, $text{'delegation_delmsg'},
 			&ui_hidden("zone", $in{'zone'}).
 			&ui_hidden("view", $in{'view'}));
 		}

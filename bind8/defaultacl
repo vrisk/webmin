@@ -1,6 +1,6 @@
 zones=*
-master=1
-slave=1
+primary=1
+secondary=1
 defaults=1
 reverse=1
 forward=1
@@ -19,7 +19,7 @@ remote=1
 gen=1
 vlist=*
 delegation=1
-slaves=1
+secondarys=1
 findfree=1
 dnssec=1
 inviews=*

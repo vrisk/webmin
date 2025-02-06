@@ -88,7 +88,7 @@ printf "<input type=radio name=defaults value=0 %s> $text{'no'}</td> </tr>\n",
 	$_[0]->{'defaults'} ? "" : "checked";
 
 print "<tr> <td><b>$text{'acl_ztypes'}</b></td> <td colspan=3>\n";
-foreach my $t ("master", "slave", "forward", "delegation") {
+foreach my $t ("primary", "secondary", "forward", "delegation") {
 	printf "<input type=checkbox name=%s %s> %s\n",
 		$t, $_[0]->{$t} ? "checked" : "", $text{'acl_ztypes_'.$t};
 	}
@@ -167,11 +167,11 @@ printf "<input type=radio name=remote value=1 %s> $text{'yes'}\n",
 printf "<input type=radio name=remote value=0 %s> $text{'no'}</td> </tr>\n",
 	$_[0]->{'remote'} ? "" : "checked";
 
-print "<tr> <td><b>$text{'acl_slaves'}</b></td> <td nowrap>\n";
-printf "<input type=radio name=slaves value=1 %s> $text{'yes'}\n",
-	$_[0]->{'slaves'} ? "checked" : "";
-printf "<input type=radio name=slaves value=0 %s> $text{'no'}</td>\n",
-	$_[0]->{'slaves'} ? "" : "checked";
+print "<tr> <td><b>$text{'acl_secondarys'}</b></td> <td nowrap>\n";
+printf "<input type=radio name=secondarys value=1 %s> $text{'yes'}\n",
+	$_[0]->{'secondarys'} ? "checked" : "";
+printf "<input type=radio name=secondarys value=0 %s> $text{'no'}</td>\n",
+	$_[0]->{'secondarys'} ? "" : "checked";
 
 print "<td><b>$text{'acl_dnssec'}</b></td> <td nowrap>\n";
 printf "<input type=radio name=dnssec value=1 %s> $text{'yes'}\n",
@@ -232,8 +232,8 @@ else {
 $_[0]->{'inviews'} = !defined($in{'inviews'}) || $in{'inviews_def'} ? "*" :
 			join(" ", split(/\0/, $in{'inviews'}));
 $_[0]->{'types'} = $in{'types_def'} ? undef : $in{'types'};
-$_[0]->{'master'} = $in{'master'} || 0;
-$_[0]->{'slave'} = $in{'slave'} || 0;
+$_[0]->{'primary'} = $in{'primary'} || 0;
+$_[0]->{'secondary'} = $in{'secondary'} || 0;
 $_[0]->{'forward'} = $in{'forward'} || 0;
 $_[0]->{'delegation'} = $in{'delegation'} || 0;
 $_[0]->{'defaults'} = $in{'defaults'};
@@ -248,7 +248,7 @@ $_[0]->{'params'} = $in{'params'};
 $_[0]->{'opts'} = $in{'opts'};
 $_[0]->{'delete'} = $in{'delete'};
 $_[0]->{'findfree'} = $in{'findfree'};
-$_[0]->{'slaves'} = $in{'slaves'};
+$_[0]->{'secondarys'} = $in{'secondarys'};
 $_[0]->{'views'} = $in{'views'};
 $_[0]->{'remote'} = $in{'remote'};
 $_[0]->{'dnssec'} = $in{'dnssec'};

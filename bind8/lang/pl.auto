@@ -2,17 +2,17 @@ index_eexpired=Ostrzeżenie: następujące strefy wygasły sygnatury DNSSEC : $1
 index_eexpired_conf=Automatyczne podpisywanie powinno zostać ponownie włączone na stronie $1.
 index_eexpired_mod=Użyj modułu $1, aby wyłączyć DNSSEC dla tych domen lub sprawdzić, dlaczego podpisywanie kończy się niepowodzeniem.
 
-master_inview=$1 w widoku $2
-master_vmin=Tą strefą zarządza Virtualmin. Rekordy należy edytować za pomocą interfejsu użytkownika Virtualmin, aby zapewnić ich spójność z innymi ustawieniami serwera wirtualnego.
-master_vminalias=Ta strefa jest aliasem domeny Virtualmin, która jest synchronizowana z celem. Rekordów nigdy nie należy tutaj edytować, ponieważ wszelkie zmiany zostaną nadpisane!
+primary_inview=$1 w widoku $2
+primary_vmin=Tą strefą zarządza Virtualmin. Rekordy należy edytować za pomocą interfejsu użytkownika Virtualmin, aby zapewnić ich spójność z innymi ustawieniami serwera wirtualnego.
+primary_vminalias=Ta strefa jest aliasem domeny Virtualmin, która jest synchronizowana z celem. Rekordów nigdy nie należy tutaj edytować, ponieważ wszelkie zmiany zostaną nadpisane!
 
 delete_vwarn=Ta strefa jest powiązana z domeną Virtualmin $1, dlatego nie należy jej tutaj usuwać!
 
 delete_vwarn2=Ta strefa jest powiązana z domeną Virtualmin $1 i $2 innymi, dlatego nie należy jej tutaj usuwać!
 
-slave_format=Format pliku strefy
-slave_raw=Surowy plik binarny
-slave_text=Zwykły tekst
+secondary_format=Format pliku strefy
+secondary_raw=Surowy plik binarny
+secondary_text=Zwykły tekst
 
 edit_eusage=„$1” nie jest prawidłowym numerem użytkowania TLSA
 edit_eselector=„$1” nie jest prawidłowym numerem selektora TLSA

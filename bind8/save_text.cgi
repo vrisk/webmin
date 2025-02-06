@@ -13,9 +13,9 @@ my $zone = &get_zone_name_or_error($in{'zone'}, $in{'view'});
 my $file = &absolute_path($zone->{'file'});
 my $tv = $zone->{'type'};
 &can_edit_zone($zone) ||
-	&error($text{'master_ecannot'});
+	&error($text{'primary_ecannot'});
 $access{'file'} || &error($text{'text_ecannot'});
-$access{'ro'} && &error($text{'master_ero'});
+$access{'ro'} && &error($text{'primary_ero'});
 
 # Write out the file
 &lock_file(&make_chroot($file));
@@ -40,5 +40,5 @@ if ($in{'soa'}) {
 &unlock_file(&make_chroot($file));
 &webmin_log("text", undef, $zone->{'name'},
 	    { 'file' => $file });
-&redirect("edit_master.cgi?zone=$in{'zone'}&view=$in{'view'}");
+&redirect("edit_primary.cgi?zone=$in{'zone'}&view=$in{'view'}");
 

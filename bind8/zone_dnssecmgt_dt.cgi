@@ -13,7 +13,7 @@ require './bind8-lib.pl';
 my $zone = &get_zone_name_or_error($in{'zone'}, $in{'view'});
 my $dom = $zone->{'name'};
 &can_edit_zone($zone) ||
-	&error($text{'master_ecannot'});
+	&error($text{'primary_ecannot'});
 $access{'dnssec'} || &error($text{'dnssec_ecannot'});
 
 if (&have_dnssec_tools_support()) {
@@ -45,6 +45,6 @@ if (&have_dnssec_tools_support()) {
 	&webmin_log("manage", undef, $dom);
 }
 
-# Return to master page
-&redirect("edit_master.cgi?zone=$in{'zone'}&view=$in{'view'}");
+# Return to primary page
+&redirect("edit_primary.cgi?zone=$in{'zone'}&view=$in{'view'}");
 

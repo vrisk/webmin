@@ -13,7 +13,7 @@ my $zone = &get_zone_name_or_error($in{'zone'}, $in{'view'});
 my $file = &absolute_path($zone->{'file'});
 my $tv = $zone->{'type'};
 &can_edit_zone($zone) ||
-	&error($text{'master_ecannot'});
+	&error($text{'primary_ecannot'});
 $access{'file'} || &error($text{'text_ecannot'});
 &ui_print_header($file, $text{'text_title2'}, "",
 		 undef, undef, undef, undef, &restart_links($zone));
@@ -37,4 +37,4 @@ else {
 	}
 
 &ui_print_footer(&redirect_url($tv, $in{'zone'}, $in{'view'}),
-		 $text{'master_return'});
+		 $text{'primary_return'});

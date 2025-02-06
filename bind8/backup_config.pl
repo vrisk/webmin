@@ -17,7 +17,7 @@ my @rv;
 my $conf = &get_config();
 push(@rv, map { $_->{'file'} } @$conf);
 
-# Add all master and hint zone files
+# Add all primary and hint zone files
 my @views = &find("view", $conf);
 my @zones;
 foreach my $v (@views) {
@@ -27,7 +27,7 @@ foreach my $v (@views) {
 push(@zones, &find("zone", $conf));
 foreach my $z (@zones) {
 	my $tv = &find_value("type", $z->{'members'});
-	next if ($tv ne "master" && $tv ne "primary" && $tv ne "hint");
+	next if ($tv ne "primary" && $tv ne "primary" && $tv ne "hint");
 	my $file = &find_value("file", $z->{'members'});
 	next if (!$file);
 	if (&is_raw_format_records(&make_chroot($file))) {

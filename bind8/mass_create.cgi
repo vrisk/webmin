@@ -11,7 +11,7 @@ require './bind8-lib.pl';
 &ui_print_unbuffered_header(undef, $text{'mass_title'}, "");
 &error_setup($text{'mass_err'});
 my $conf = &get_config();
-$access{'ro'} && &error($text{'master_ero'});
+$access{'ro'} && &error($text{'primary_ero'});
 
 # Check if the template needs IPs
 my $tmpl_ip;
@@ -108,23 +108,23 @@ foreach my $l (@lines) {
 			}
 		}
 
-	my $type = $w[1] || "master";
+	my $type = $w[1] || "primary";
 	my $file = $w[2];
 	my $dir;
 	my $base;
-	if ($type eq "master") {
-		# Creating a master zone
-		if (!$access{'master'}) {
+	if ($type eq "primary") {
+		# Creating a primary zone
+		if (!$access{'primary'}) {
 			&line_error($l, $text{'mcreate_ecannot'});
 			next;
 			}
 
 		# Work out the base
-		$base = $config{'master_dir'} ? $config{'master_dir'} :
+		$base = $config{'primary_dir'} ? $config{'primary_dir'} :
 			$access{'dir'} eq '/' ? &base_directory($conf) :
 						$access{'dir'};
 		if ($base !~ /^([a-z]:)?\//) {
-			# Master dir is relative .. make absolute
+			# primary dir is relative .. make absolute
 			$base = &base_directory()."/".$base;
 			}
 
@@ -153,19 +153,19 @@ foreach my $l (@lines) {
 			}
 
 		# Create the zone file and initial records
-		my $master = $config{'default_prins'} ||
+		my $primary = $config{'default_prins'} ||
 				&get_system_hostname();
-		$master =~ s/\.$//;
-		$master .= ".";
-		my $email = $config{'tmpl_email'} || "root\@$master";
+		$primary =~ s/\.$//;
+		$primary .= ".";
+		my $email = $config{'tmpl_email'} || "root\@$primary";
 		$email = &email_to_dotted($email);
-		&create_master_records($file, $dom, $master, $email,
+		&create_primary_records($file, $dom, $primary, $email,
 				       $zd{'refresh'}.$zd{'refunit'},
 				       $zd{'retry'}.$zd{'retunit'},
 				       $zd{'expiry'}.$zd{'expunit'},
 				       $zd{'minimum'}.$zd{'minunit'},
 				       1,
-				       $in{'onslave'} && $access{'remote'},
+				       $in{'onsecondary'} && $access{'remote'},
 				       $in{'tmpl'}, $mips[0]);
 
 		# Create the zone directive
@@ -173,28 +173,28 @@ foreach my $l (@lines) {
 			 'values' => [ $dom ],
 			 'type' => 1,
 			 'members' => [ { 'name' => 'type',
-					  'values' => [ 'master' ] },
+					  'values' => [ 'primary' ] },
 					{ 'name' => 'file',
 					  'values' => [ $file ] } ]
 			};
 		}
-	elsif ($type eq "slave" || $type eq "stub") {
-		# Creating a slave or stub zone
-		if (!$access{'slave'}) {
+	elsif ($type eq "secondary" || $type eq "stub") {
+		# Creating a secondary or stub zone
+		if (!$access{'secondary'}) {
 			&line_error($l, $text{'screate_ecannot1'});
 			next;
 			}
 
 		# Work out the base
-		$base = $config{'slave_dir'} ? $config{'slave_dir'} :
+		$base = $config{'secondary_dir'} ? $config{'secondary_dir'} :
 			$access{'dir'} eq '/' ? &base_directory($conf) :
 						$access{'dir'};
 		if ($base !~ /^([a-z]:)?\//) {
-			# Slave dir is relative .. make absolute
+			# secondary dir is relative .. make absolute
 			$base = &base_directory()."/".$base;
 			}
 
-		# Make sure some master IPs were given
+		# Make sure some primary IPs were given
 		if (!@mips) {
 			&line_error($l, $text{'mass_emips'});
 			next;
@@ -231,7 +231,7 @@ foreach my $l (@lines) {
 
 		# Create the structure
 		my @mdirs = map { { 'name' => $_ } } @mips;
-		my $masters = { 'name' => 'masters',
+		my $primarys = { 'name' => 'primarys',
 				   'type' => 1,
 				   'members' => \@mdirs };
 		$dir = { 'name' => 'zone',
@@ -239,7 +239,7 @@ foreach my $l (@lines) {
 			 'type' => 1,
 			 'members' => [ { 'name' => 'type',
 					  'values' => [ $type ] },
-					$masters
+					$primarys
 				      ]
 			};
 		if ($file) {
@@ -255,7 +255,7 @@ foreach my $l (@lines) {
 			next;
 			}
 
-		# Make sure some master IPs were given
+		# Make sure some primary IPs were given
 		if (!@mips) {
 			&line_error($l, $text{'mass_emips'});
 			next;
@@ -263,7 +263,7 @@ foreach my $l (@lines) {
 
 		# Create the structure
 		my @mdirs = map { { 'name' => $_ } } @mips;
-		my $masters = { 'name' => 'forwarders',
+		my $primarys = { 'name' => 'forwarders',
 				   'type' => 1,
 				   'members' => \@mdirs };
 		$dir = { 'name' => 'zone',
@@ -271,7 +271,7 @@ foreach my $l (@lines) {
 			 'type' => 1,
 			 'members' => [ { 'name' => 'type',
 					  'values' => [ 'forward' ] },
-					$masters
+					$primarys
 				      ]
 			};
 		}
@@ -290,19 +290,19 @@ foreach my $l (@lines) {
 		$zonecount++;
 		}
 
-	if ($type eq "master" && $in{'onslave'} && $access{'remote'}) {
-		# Create on slave servers
-		my @slaveerrs = &create_on_slaves($dom,
+	if ($type eq "primary" && $in{'onsecondary'} && $access{'remote'}) {
+		# Create on secondary servers
+		my @secondaryerrs = &create_on_secondarys($dom,
 		  $config{'this_ip'} || &to_ipaddress(&get_system_hostname()),
 		  undef, undef, $vn);
 		print "&nbsp;&nbsp;\n";
-		if (@slaveerrs) {
-			my $serrs = join(", ", map { "$_->[0]->{'host'} : $_->[1]" } @slaveerrs);
+		if (@secondaryerrs) {
+			my $serrs = join(", ", map { "$_->[0]->{'host'} : $_->[1]" } @secondaryerrs);
 			print "<font color=#ff0000>",
-			      &text('mass_eonslave', $serrs),"</font><br>\n";
+			      &text('mass_eonsecondary', $serrs),"</font><br>\n";
 			}
 		else {
-			print &text('mass_addedslaves', $dom),"<br>\n";
+			print &text('mass_addedsecondarys', $dom),"<br>\n";
 			}
 		}
 	}

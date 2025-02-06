@@ -11,7 +11,7 @@ require './bind8-lib.pl';
 my $zone = &get_zone_name_or_error($in{'zone'}, $in{'view'});
 my $dom = $zone->{'name'};
 &can_edit_zone($zone) ||
-	&error($text{'master_ecannot'});
+	&error($text{'primary_ecannot'});
 $access{'dnssec'} || &error($text{'dnssec_ecannot'});
 
 my $desc = &zone_subhead($zone);
@@ -148,5 +148,5 @@ else {
 	print &ui_form_end([ [ undef, $text{'zonekey_enable'} ] ]);
 	}
 
-&ui_print_footer("edit_master.cgi?zone=$in{'zone'}&view=$in{'view'}",
-	$text{'master_return'});
+&ui_print_footer("edit_primary.cgi?zone=$in{'zone'}&view=$in{'view'}",
+	$text{'primary_return'});
